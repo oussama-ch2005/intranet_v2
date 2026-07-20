@@ -52,6 +52,7 @@ public class MessageService {
 
                 mentionRepository.save(Mention.builder()
                         .message(msg)
+                        .mentionner(sender)
                         .user(mentioned)
                         .build()
                 );

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ConversationRequest {
-    private String typeObjet;//demande ou tache
-    private Long idObjet;
+    private String typeObject;//demande ou tache
+    private Long idObject;
 }

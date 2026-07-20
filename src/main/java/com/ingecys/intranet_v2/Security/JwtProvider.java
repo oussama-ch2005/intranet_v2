@@ -24,11 +24,11 @@ public class JwtProvider {
     public String genererToken(String email, String role) {
         return Jwts.builder()
                 .subject(email)
-                .claim("role", role)          //  role et non String.class
+                .claim("role", role)          //  role et non stringclass
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getKey())
-                .compact();
+                .signWith(getKey())//la signature du cle
+                .compact();//construction chaine
     }
 
     public String extraireEmail(String token) {
@@ -42,11 +42,11 @@ public class JwtProvider {
 
     public String extraireRole(String token) {
         return Jwts.parser()
-                .verifyWith(getKey())
+                .verifyWith(getKey())//verification de la cle
                 .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .get("role", String.class);
+                .parseSignedClaims(token)//decodage de jwt
+                .getPayload()//retour le payload
+                .get("role", String.class);//retourne le role
     }
 
     public boolean validerToken(String token) {

@@ -16,13 +16,16 @@ public class Conversation{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "type_objet", nullable = false)
-    private String typeObjet; // DEMANDE, TACHE, TICKET, INTERVENTION, MATERIEL
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private StatusConverstion statut; // actve desactive
 
-    @Column(name = "id_objet", nullable = false)
+    @Column(name="id_object",nullable = false)
     private Long idObjet;
 
-    private String statut; // ACTIF, FERME
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type_object")
+    private TypeObject typeObject;
 
     @Column(name = "date_creation")
     private LocalDateTime dateCreation;
@@ -35,13 +38,19 @@ public class Conversation{
     private List<Message> messages;
 
 
+    @OneToOne(mappedBy = "conversation",fetch = FetchType.EAGER)
+    private ObjectMetier objetMetier;
+
+
+
+
 
     @PrePersist
     public void prePersist() {
         this.dateCreation = LocalDateTime.now();
-        this.statut = "ACTIF";
+        this.statut = StatusConverstion.ACTIF;
     }
     public Long getCreeParId() {
-        return this.creePar.getId();
+        return this.creePar.getId()!=null?this.creePar.getId():null;
     }
 }

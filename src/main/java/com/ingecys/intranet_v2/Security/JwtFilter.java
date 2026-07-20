@@ -1,18 +1,15 @@
 package com.ingecys.intranet_v2.Security;
 
-import jakarta.persistence.Column;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 
 import java.io.IOException;
 import java.util.List;
@@ -23,39 +20,56 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
 
-    // ✅ Ajoutez cette méthode — skip complet sur les routes publiques
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.startsWith("/api/auth/");
+        return path.startsWith("/api/auth/") || path.startsWith("/api/test/");
     }
+
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                    @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
-
+        System.out.println(">>> URI     : " + request.getRequestURI());
+        System.out.println(">>> HEADER  : " + authHeader);
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-
             String token = authHeader.substring(7);
+            System.out.println(">>> TOKEN   : " + token.substring(0, 20) + "...");
 
+            try {
+                boolean valid = jwtProvider.validerToken(token);
+                System.out.println(">>> VALIDE  : " + valid);
 
-            if(jwtProvider.validerToken(token)) {
+                if (valid) {
+                    String email = jwtProvider.extraireEmail(token);
+                    String role  = jwtProvider.extraireRole(token);
+                    System.out.println(">>> EMAIL   : " + email);
+                    System.out.println(">>> ROLE    : " + role);
 
-                String email=jwtProvider.extraireEmail(token);
-                String role = jwtProvider.extraireRole(token);
+                    var auth = new UsernamePasswordAuthenticationToken(
+                            email, null,
+                            List.of(new SimpleGrantedAuthority("ROLE_" + role))
+                    );
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                    System.out.println("✅ Auth OK  : " + email);
+                } else {
+                    System.out.println("❌ Token invalide");
+                }
 
-                var auth=new UsernamePasswordAuthenticationToken(
-                        email, null, List.of(new SimpleGrantedAuthority("ROLE_"+role)));
-                SecurityContextHolder.getContext().setAuthentication(auth);
-
+            } catch (Exception e) {
+                // ✅ Maintenant vous voyez l'erreur exacte
+                System.out.println("❌ ERREUR   : " + e.getClass().getSimpleName());
+                System.out.println("❌ MESSAGE  : " + e.getMessage());
+                e.printStackTrace();
             }
+
+        } else {
+            System.out.println("⚠️ Pas de header Bearer");
         }
+
         filterChain.doFilter(request, response);
-
-
-
-
     }
 }
