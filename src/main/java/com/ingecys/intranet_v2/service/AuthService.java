@@ -19,24 +19,24 @@ public class AuthService {
     private final JwtProvider jwtProvider;
 
     public AuthResponse connecter(AuthRequest request) {
-        System.out.println(">>> EMAIL REÇU : " + request.getEmail());
-        System.out.println(">>> MOT DE PASSE REÇU : " + request.getPassword());
+        System.out.println("EMAIL REÇU : " + request.getEmail());
+        System.out.println("MOT DE PASSE REÇU : " + request.getPassword());
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> {
-                    System.out.println(">>> UTILISATEUR NON TROUVÉ");
+                    System.out.println(" UTILISATEUR NON TROUVÉ");
                     return new RuntimeException("Utilisateur introuvable");
                 });
 
-        System.out.println(">>> UTILISATEUR TROUVÉ : " + user.getEmail());
-        System.out.println(">>> HASH EN BASE : " + user.getPassword());
+        System.out.println("UTILISATEUR TROUVÉ : " + user.getEmail());
+        System.out.println("HASH EN BASE : " + user.getPassword());
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            System.out.println(">>> MOT DE PASSE INCORRECT");
+            System.out.println("MOT DE PASSE INCORRECT");
             throw new RuntimeException("Mot de passe incorrect");
         }
 
-        System.out.println(">>> CONNEXION OK");
+        System.out.println("CONNEXION OK");
         String token = jwtProvider.genererToken(user.getEmail(), user.getRole());
         return AuthResponse.builder()
                 .token(token)

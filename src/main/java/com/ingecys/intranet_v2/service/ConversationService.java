@@ -23,7 +23,7 @@ public class ConversationService {
     private final MessageRepository messageRepository;
     private final ObjectMetierRepository objectMetierRepository;
 
-    // ✅ On cherche par id de l'objet directement
+    //  cherche par id de l objet directement et mail
     @Transactional
     public ConversationResponse obtenirConversation(Long objectId, String emailUser) {
 
@@ -46,7 +46,7 @@ public class ConversationService {
         return mapperVersResponse(object.getConversation(), object);
     }
 
-    // Récupérer une conversation par son id
+    //  conversation par son id
     public ConversationResponse obtenirConversationById(Long conversationId) {
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation introuvable"));
@@ -98,6 +98,7 @@ public class ConversationService {
                 .messages(messages)
                 .build();
     }
+
     private MessageResponde mapperMessage(Message msg) {
         return MessageResponde.builder()
                 .id(msg.getId())

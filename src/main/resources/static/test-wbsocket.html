@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h3>Test WebSocket STOMP</h3>
+<input id="msgInput" placeholder="Message" value="Hello">
+<button id="sendBtn">Envoyer</button>
+<ul id="messages"></ul>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script>
+    const socket = new SockJS('http://localhost:8080/ws');
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, (frame) => {
+
+        console.log('Connecté : ' + frame);
+        document.getElementById('messages').innerHTML += '<li>Connecté au serveur</li>';
+
+        stompClient.subscribe('/topic/messages', (message) => {
+            document.getElementById('messages').innerHTML += '<li>Reçu : ' + message.body + '</li>';
+        });
+
+    }, (error) => {
+        console.log('Erreur : ' + error);
+        document.getElementById('messages').innerHTML += '<li> Erreur de connexion</li>';
+    });
+
+    document.getElementById('sendBtn').addEventListener('click', () => {
+        const texte = document.getElementById('msgInput').value;
+        stompClient.send('/app/chat', {}, JSON.stringify({ contenu: texte }));
+    });
+
+
+</script>
+</body>
+</html>

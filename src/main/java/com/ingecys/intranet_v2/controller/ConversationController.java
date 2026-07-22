@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/conversations")
 @RequiredArgsConstructor
@@ -30,6 +32,12 @@ public class ConversationController {
         return ResponseEntity.ok(conversationService.obtenirConversationById(id));
     }
 
-
+    @GetMapping("/type/{typeObject}")
+    public  ResponseEntity<List<ConversationResponse>> obtenirParTypeObject(
+           @PathVariable String typeObject,
+            Authentication auth)
+    {
+        return  ResponseEntity.ok( conversationService.listerParType(typeObject));
+    }
 
 }

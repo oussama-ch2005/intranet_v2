@@ -32,7 +32,7 @@ public class JwtProvider {
     }
 
     public String extraireEmail(String token) {
-        return Jwts.parser()
+        return Jwts.parser()//lirre ke toke
                 .verifyWith(getKey())
                 .build()
                 .parseSignedClaims(token)

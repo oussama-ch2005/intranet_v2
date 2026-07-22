@@ -46,7 +46,7 @@ public class ObjectMetierService {
                     + " → FAIBLE, NORMALE, HAUT, URGENTE");
         }
 
-        // ✅ ÉTAPE 1 — Créer l'objet métier SANS conversation d'abord
+        // Creer l objet metier without conversation
         ObjectMetier objet = ObjectMetier.builder()
                 .typeObject(type)
                 .title(request.getTitle())
@@ -55,17 +55,17 @@ public class ObjectMetierService {
                 .createdBy(user)
                 .build();
 
-        // ✅ ÉTAPE 2 — Sauvegarder l'objet pour obtenir son id
+        //  sauvegarder l objet pour obtenir son id
         ObjectMetier saved = objectMetierRepository.save(objet);
 
-        // ✅ ÉTAPE 3 — Créer la conversation AVEC l'id_object maintenant connu
+        // Créer la conversation avec l id_object maintenant connu
         Conversation conversation = Conversation.builder()
                 .typeObject(type)
                 .idObjet(saved.getId())   // ← id disponible maintenant
                 .creePar(user)
                 .build();
 
-        // ✅ ÉTAPE 4 — Lier la conversation à l'objet et sauvegarder
+        //  Lier la conversation à l'objet et sauvegarder
         saved.setConversation(conversation);
         saved = objectMetierRepository.save(saved);   // cascade sauvegarde la conversation
 
@@ -73,7 +73,7 @@ public class ObjectMetierService {
     }
 
     public ObjectMetierResponse obtenirParId(Long id){
-        ObjectMetier objectMetier= (ObjectMetier) objectMetierRepository.findById(id)// !!!!!kayna wa7d confusion bin la calss parent object et entiter obect donc on fait un cast
+        ObjectMetier objectMetier= (ObjectMetier) objectMetierRepository.findById(id)// kayna wa7d confusion bin la calss parent object et entiter obect donc on fait un cast
                 .orElseThrow(()->new RuntimeException("Object introuvable"));
         return mapper(objectMetier);
 

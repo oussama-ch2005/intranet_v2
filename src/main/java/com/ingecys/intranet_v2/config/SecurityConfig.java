@@ -30,12 +30,12 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) //  CORS ici
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//sans session
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll() //  route de debug
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated()//necessit user authentifier
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -45,7 +45,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("*"));//les rquette peuvent venir de tout les origine, a changer aussi
+        config.setAllowedOriginPatterns(List.of("*"));//les rquette peuvent venir de tout les origine "domainename production"
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));//options preflight cors
         config.setAllowedHeaders(List.of("*"));//* a changer pour renforcer lea securiter
         config.setAllowCredentials(true);//autorise l envoi d'information  d'authentification(cookies....)

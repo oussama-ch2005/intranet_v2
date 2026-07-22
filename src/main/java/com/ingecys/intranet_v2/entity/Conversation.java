@@ -30,7 +30,7 @@ public class Conversation{
     @Column(name = "date_creation")
     private LocalDateTime dateCreation;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cree_par")
     private User creePar;
 
@@ -38,7 +38,7 @@ public class Conversation{
     private List<Message> messages;
 
 
-    @OneToOne(mappedBy = "conversation",fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "conversation")
     private ObjectMetier objetMetier;
 
 

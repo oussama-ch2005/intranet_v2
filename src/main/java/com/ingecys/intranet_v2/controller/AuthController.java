@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+
     @PostMapping("/connexion")
   public ResponseEntity<AuthResponse> connecter(@RequestBody AuthRequest authRequest){
       return ResponseEntity.ok(authService.connecter(authRequest));

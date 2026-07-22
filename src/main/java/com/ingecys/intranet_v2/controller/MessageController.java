@@ -25,12 +25,13 @@ public class MessageController {
             @PathVariable Long conversationId,
             @RequestBody MessageRequest request,
             Authentication auth
-    ){
+    ){  System.out.println("entrer en message controller conversation");
         return ResponseEntity.ok(
 
                 messageService.envoiMessage(conversationId,request,auth.getName())
 
         );
+
     }
 
     // DELETE /api/message/1

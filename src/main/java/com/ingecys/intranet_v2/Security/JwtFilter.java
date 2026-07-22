@@ -32,42 +32,41 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
-        System.out.println(">>> URI     : " + request.getRequestURI());
-        System.out.println(">>> HEADER  : " + authHeader);
+        System.out.println(" URI     : " + request.getRequestURI());
+        System.out.println(" HEADER  : " + authHeader);
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-            System.out.println(">>> TOKEN   : " + token.substring(0, 20) + "...");
+            System.out.println("TOKEN   : " + token.substring(0, 20) );
 
             try {
                 boolean valid = jwtProvider.validerToken(token);
-                System.out.println(">>> VALIDE  : " + valid);
+                System.out.println("VALIDE  : " + valid);
 
                 if (valid) {
                     String email = jwtProvider.extraireEmail(token);
                     String role  = jwtProvider.extraireRole(token);
-                    System.out.println(">>> EMAIL   : " + email);
-                    System.out.println(">>> ROLE    : " + role);
+
 
                     var auth = new UsernamePasswordAuthenticationToken(
                             email, null,
-                            List.of(new SimpleGrantedAuthority("ROLE_" + role))
+                            List.of(new SimpleGrantedAuthority("ROLE_" + role))//role oupermission
                     );
-                    SecurityContextHolder.getContext().setAuthentication(auth);
-                    System.out.println("✅ Auth OK  : " + email);
+                    SecurityContextHolder.getContext().setAuthentication(auth); //stock info de decurite de requet en cour
+                    System.out.println("Auth OK  : " + email);
                 } else {
-                    System.out.println("❌ Token invalide");
+                    System.out.println(" Token invalide");
                 }
 
             } catch (Exception e) {
-                // ✅ Maintenant vous voyez l'erreur exacte
-                System.out.println("❌ ERREUR   : " + e.getClass().getSimpleName());
-                System.out.println("❌ MESSAGE  : " + e.getMessage());
+
+                System.out.println(" ERREUR   : " + e.getClass().getSimpleName());
+                System.out.println(" MESSAGE  : " + e.getMessage());
                 e.printStackTrace();
             }
 
         } else {
-            System.out.println("⚠️ Pas de header Bearer");
+            System.out.println("Pas de header Bearer");
         }
 
         filterChain.doFilter(request, response);

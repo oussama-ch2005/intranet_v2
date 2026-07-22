@@ -44,7 +44,7 @@ public class ObjectMetier {
     @Column(name="date_creation")
     private LocalDateTime createdAt;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "conversation_id")
     private Conversation conversation;
 
