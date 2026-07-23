@@ -17,7 +17,7 @@ public class Conversation{
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "statut")
     private StatusConverstion statut; // actve desactive
 
     @Column(name="id_object",nullable = false)

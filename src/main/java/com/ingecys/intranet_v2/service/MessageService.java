@@ -31,6 +31,8 @@ public class MessageService {
                 .orElseThrow(()->new RuntimeException("conversation introuvable"));
         User sender= userRepository.findByEmail(emailSender)
                 .orElseThrow(()->new RuntimeException("user not found"));
+
+
         // sauvgarde des message
         Message msg=Message.builder()
                 .conversation(conv)
@@ -110,7 +112,7 @@ public class MessageService {
                          .id(sender.getId())
                          .nom(sender.getNom())
                          .prenom(sender.getPrenom())
-                         .build())
+                         .build()).mentionsPrenoms(mentionsPrenoms).pieceJointes(pieceJointeDtos)
                  .build();
 
         //diffuser via web socket

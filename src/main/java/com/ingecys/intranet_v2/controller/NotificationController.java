@@ -25,7 +25,7 @@ public class NotificationController {
     }
     //put /api/notification/1/lue
     @PutMapping("/{id}/lue")
-    public ResponseEntity<Void> marquerLue( @RequestParam Long id) {
+    public ResponseEntity<Void> marquerLue(@PathVariable  Long id) {
         notificationService.marqueComeLue(id);
         return ResponseEntity.ok().build();
 

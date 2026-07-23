@@ -25,7 +25,9 @@ public class NotificationService {
     public void marqueComeLue(Long notifId){
         Notification notif=notificationRepository.findById(notifId)
                 .orElseThrow(() -> new RuntimeException("Notification introuvable"));
+        System.out.println("**************************");
         notif.setLu(true);
+        System.out.println("**********\n"+notif+"\n************");
         notificationRepository.save(notif);
     }
 
