@@ -12,6 +12,7 @@ public class MessageRequest {
     private String content;
     private List<Long> id_mentiones;
     private List<PieceJointeRequest> pieceJointeRequests;
+    private Long receiverId;
     @Data
     public static class PieceJointeRequest {
         private String nomFichier;

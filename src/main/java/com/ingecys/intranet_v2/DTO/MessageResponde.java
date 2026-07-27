@@ -17,6 +17,7 @@ public class MessageResponde {
     private LocalDateTime sent_date;
     private boolean deleted;
     private AuteurDto auteur;
+    private ReceiverDto receiver;
     private List<PieceJointeDto> pieceJointes;
     private List<String> mentionsPrenoms;
 
@@ -36,6 +37,13 @@ public class MessageResponde {
         private String url;
         private String TypeFichier;
 
+    }
+    @Builder
+    @Data
+    public static class ReceiverDto{
+        private Long id;
+        private String nom;
+        private String prenom;
     }
 
 

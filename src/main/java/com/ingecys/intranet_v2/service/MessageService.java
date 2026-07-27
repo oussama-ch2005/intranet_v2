@@ -32,11 +32,18 @@ public class MessageService {
         User sender= userRepository.findByEmail(emailSender)
                 .orElseThrow(()->new RuntimeException("user not found"));
 
+       User receiver=null;
+       if(messageRequest.getReceiverId()!=null){
+           receiver=userRepository.findById(messageRequest.getReceiverId())
+                   .orElseThrow(()->new RuntimeException("user not found"));
+       }
+
 
         // sauvgarde des message
         Message msg=Message.builder()
                 .conversation(conv)
                 .sender(sender)
+                .receiver(receiver) //null or user
                 .content(messageRequest.getContent())
                 .build();
         msg=messageRepository.save(msg);
@@ -45,8 +52,8 @@ public class MessageService {
         // sauvegarde des pieces joients
 
         List<PieceJointe> piecesJointes=new ArrayList<>();
-
         if(messageRequest.getPieceJointeRequests()!=null){
+
             for (MessageRequest.PieceJointeRequest pj: messageRequest.getPieceJointeRequests()) {
                 PieceJointe pieceJointe=PieceJointe.builder()
                         .message(msg)
@@ -61,7 +68,6 @@ public class MessageService {
 
         //sauvgarder les mentions & cree les notif
         List<String> mentionsPrenoms=new ArrayList<>();
-
         if(messageRequest.getId_mentiones()!=null){
 
             for(Long userId:messageRequest.getId_mentiones()){
@@ -85,7 +91,11 @@ public class MessageService {
                         .type("MENTION")
                         .build());
 
-
+                messagingTemplate.convertAndSendToUser(
+                        mentioned.getEmail(),//destinateire
+                        "/queue/notifications",//canal prive
+                        "vous avez ete mentionne par "+sender.getPrenom()
+                );
 
                 mentionsPrenoms.add(mentioned.getPrenom());
 
@@ -93,34 +103,59 @@ public class MessageService {
             }
         }
         //construire la reponse
-        List<MessageResponde.PieceJointeDto>pieceJointeDtos=piecesJointes.stream()
-                .map((pj->MessageResponde.PieceJointeDto.builder()
+        List<MessageResponde.PieceJointeDto> pieceJointeDtos=piecesJointes.stream()
+                .map(pj->MessageResponde.PieceJointeDto.builder()
                         .id((long) pj.getId())
                         .nomFichier(pj.getNomFichier())
                         .url(pj.getUrl())
                         .TypeFichier(pj.getTypeFichier())
                         .build()
 
-                )).toList();
+                ).toList();
 
 
-         MessageResponde responde=MessageResponde.builder()
-                 .id(msg.getId())
-                 .content(msg.getContent())
-                 .sent_date(msg.getDateEnvoi())
-                 .auteur(MessageResponde.AuteurDto.builder()
-                         .id(sender.getId())
-                         .nom(sender.getNom())
-                         .prenom(sender.getPrenom())
-                         .build()).mentionsPrenoms(mentionsPrenoms).pieceJointes(pieceJointeDtos)
-                 .build();
+        MessageResponde.ReceiverDto receiverDto=null;
+        if(receiver!=null){
+            receiverDto=MessageResponde.ReceiverDto.builder()
+                    .id(receiver.getId())
+                    .nom(receiver.getNom())
+                    .prenom(receiver.getPrenom())
+                    .build();
+        }
 
-        //diffuser via web socket
-        messagingTemplate.convertAndSend("/topic/conversation/"+conversationId,responde);
-        System.out.println("Message diffusé sur /topic/conversation/" + conversationId);
+        //construire  la reponse
+
+        MessageResponde responde=MessageResponde.builder()
+                .id(msg.getId())
+                .content(msg.getContent())
+                .sent_date(msg.getDateEnvoi())
+                .auteur(MessageResponde.AuteurDto.builder()
+                        .id(sender.getId())
+                        .nom(sender.getNom())
+                        .prenom(sender.getPrenom())
+                        .build()
+                ).receiver(receiverDto)
+                .pieceJointes(pieceJointeDtos)
+                .mentionsPrenoms(mentionsPrenoms)
+                .build();
+        //diffuser vie websocket
+        if(receiver!=null){
+            messagingTemplate.convertAndSendToUser(
+                    receiver.getEmail(),
+                    "/queue/messages",
+                    responde
+            );
+            System.out.println("message prive envoye à "+ receiver.getEmail());
+        }else {
+            messagingTemplate.convertAndSend("/topic/conversation/"+conversationId,responde);
+            System.out.println("message diffuser sur /topic/conversation/"+conversationId);
+        }
 
 
-        return responde;
+
+
+
+      return responde;
 
 
     }
@@ -134,7 +169,7 @@ public class MessageService {
         System.out.println("Auteur du message    : " + message.getSender().getEmail());
         System.out.println("Message ID           : " + message.getId());
         System.out.println("Avant le if");
-        if(!message.getSender().getEmail().equals(emailUser)){
+        if(!message.getSender().getEmail().equals(emailUser)) {
             System.out.println("en le if");
             throw new RuntimeException("Vous ne pouvez supprimer que vos propres messages");
         }

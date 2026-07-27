@@ -24,6 +24,8 @@ public class ObjectMetierController {
                 (objectMetierService.creer(request,auth.getName())
                 );}
 
+
+
     @GetMapping("/{id}")
     public ResponseEntity<ObjectMetierResponse> obtenirParId(@PathVariable Long id){
         return ResponseEntity.ok(objectMetierService.obtenirParId(id));
