@@ -14,23 +14,30 @@ import {Router} from '@angular/router';
 })
 export class Login {
   email='';
-  motDePasse='';
+  password='';
   erreur='';
-  chargement=false
+  chargement=false;
 
   constructor(private auth:Auth,private router :Router) {}
 
   connecter (){
     this.erreur="";
+
     this.chargement=true;
-    this.auth.connecter(this.email, this.motDePasse).subscribe({
-      next: () => {
+
+    this.auth.connecter(this.email, this.password).subscribe({
+      next: (response) => {
         this.chargement=false;
-        this.router.navigate(['/accueil']);
+        // rediger selon le role de l'utilisateur
+        if(response.role==="ADMIN"){
+          this.router.navigate(['/admin/dashboard']);
+        }else{
+          this.router.navigate(['/user/tickets']);
+        }
       },
       error: () => {
         this.chargement=false;
-        this.erreur="Identifiants incorrects";
+        this.erreur="Email ou mot de passe incorrect";
       }
     });
   }

@@ -1,4 +1,16 @@
-import { Service } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+@Injectable({providedIn:'root'})
+export class Conversation {
+  private apiUrl = "http://localhost:8080/api/conversation";
 
-@Service()
-export class Conversation {}
+  constructor(private http: HttpClient) {}
+
+  obtenirParId(id: number) {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
+  obtenirOuCreer(objectId:number){
+    return this.http.get(`${this.apiUrl}/object/${objectId}`);
+  }
+  
+}

@@ -1,31 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
-</head>
-<body>
-    <div class="login-container">
-        <div class="login-card">
+<div class="login-container">
+  <div class="login-card">
 
-            <div class ="login-header">
-                <div class="logo">
-                    <span>I</span>
-                </div>
-              <h1>Ingecys Intranet</h1>
-              <p>Connectez-vous a votre espace</p>
-            </div>
-
-          <div class="login-form">
-         <div class ="erreur" *ngIf="erreur">
-           {{ erreur }}
-         </div>
-          </div>
-
-
-        </div>
+    <div class="login-header">
+      <div class="logo">
+        <span>I</span>
+      </div>
+      <h1>Ingecys Intranet</h1>
+      <p>Connectez-vous à votre espace</p>
     </div>
 
-</body>
-</html>
+    <div class="login-form">
+
+      <!-- Message d'erreur -->
+      <div class="erreur" *ngIf="erreur">
+        {{ erreur }}
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label>Adresse email</label>
+        <input
+          type="email"
+          [(ngModel)]="email"
+          placeholder="jean@ingecys.com"
+          (keyup.enter)="connecter()"
+        />
+      </div>
+
+      <!-- Mot de passe -->
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input
+          type="password"
+          [(ngModel)]="password"
+          placeholder="••••••••"
+          (keyup.enter)="connecter()"
+        />
+      </div>
+
+      <!-- Bouton -->
+      <button
+        class="btn-connexion"
+        (click)="connecter()"
+        [disabled]="chargement"
+      >
+        {{ chargement ? 'Connexion...' : 'Se connecter' }}
+      </button>
+
+    </div>
+  </div>
+</div>

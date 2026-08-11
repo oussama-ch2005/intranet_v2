@@ -1,1 +1,43 @@
-<p>sidebar works!</p>
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">I</div>
+    <div>
+      <p class="app-name">Ingecys</p>
+      <p class="app-role">{{ auth.estAdmin() ? 'Administration' : 'Espace utilisateur' }}</p>
+    </div>
+  </div>
+
+  <!-- Menu Admin -->
+  <nav *ngIf="auth.estAdmin()">
+    <a routerLink="/admin/dashboard" routerLinkActive="active">
+      <i class="icon">⊞</i> Tableau de bord
+    </a>
+    <a routerLink="/admin/tickets" routerLinkActive="active">
+      <i class="icon">🎫</i> Tickets
+    </a>
+    <a routerLink="/admin/users" routerLinkActive="active">
+      <i class="icon">👥</i> Utilisateurs
+    </a>
+  </nav>
+
+  <!-- Menu Utilisateur -->
+  <nav *ngIf="!auth.estAdmin()">
+    <a routerLink="/user/tickets" routerLinkActive="active">
+      <i class="icon">🎫</i> Mes tickets
+    </a>
+    <a routerLink="/user/conversation" routerLinkActive="active">
+      <i class="icon">💬</i> Messages
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="avatar">{{ auth.getEmail()?.charAt(0)?.toUpperCase() }}</div>
+      <div>
+        <p class="user-email">{{ auth.getEmail() }}</p>
+        <p class="user-role">{{ auth.getRole() }}</p>
+      </div>
+    </div>
+    <button class="btn-logout" (click)="deconnecter()">Déconnexion</button>
+  </div>
+</aside>

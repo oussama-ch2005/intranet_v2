@@ -1,0 +1,102 @@
+
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:white;
+}
+.login-card {
+    width: 400px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    background-color: #fff;
+}
+.login-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.logp{
+    width:48px;
+    height:48px;
+    border-radius: 50%;
+    background-color: #f2f2f2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 auto 10px;
+    color: #333;
+}
+h1 {
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    margin: 0;
+    color: #111;
+}
+
+p{
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+label {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+}
+input[type="email"],
+input[type="password"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #000000;
+    background-color: #f2f2f2;
+    transition: border-color 0.3s ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #399ce3;
+}
+
+.btn-connexion{
+    width:100%;
+    background-color: #2617c7;
+    color:white;
+    border:none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor:pointer;
+    margin-top: 8px;
+    transition: opacity 0.3s ease;
+
+}
+.btn-connexion:disabled{
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.erreur{
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    border-radius:8px ;
+    padding: 8px;
+    background-color: #f2f2f2;
+}

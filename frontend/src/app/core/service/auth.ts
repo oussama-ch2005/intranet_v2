@@ -11,10 +11,10 @@ export class Auth {
   constructor(private http: HttpClient ,private router:Router) {}
 
   //conexion envoi email/motdepass ,reçoit le token
-  connecter(email:string,motDePasse:string){
+  connecter(email:string,password:string){
     return this.http.post<{token:string,email:string,role:string}>(
       `${this.apiUrl}/connexion`,
-      {email,motDePasse}
+      {email,password}
     ).pipe(
       tap(response=>{
         //stocker le token et les info user
@@ -46,10 +46,21 @@ export class Auth {
   getRole():string|null{
     return localStorage.getItem('role');
   }
-
-  estAdmin():boolean{
-    return this.getRole()==="ADMIN"
+  getEmail():string|null{
+    return localStorage.getItem('email');
   }
+
+  
+estAdmin(): boolean {
+  const role = this.getRole();
+  if (!role) return false;
+  const normalized = (typeof role === 'string' ? role : JSON.stringify(role))
+    .toUpperCase()
+    .replace(/^ROLE_/, '')
+    .trim();
+  return normalized === 'ADMIN' || normalized.includes('ADMIN');
+}
+
 
 
 

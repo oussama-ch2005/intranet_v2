@@ -1,1 +1,68 @@
-<p>dashboard works!</p>
+<div class="layout">
+  <app-sidebar></app-sidebar>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Tableau de bord</h1>
+      <button class="btn-primary" routerLink="/admin/tickets">+ Nouveau ticket</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <p class="stat-label">Tickets ouverts</p>
+        <p class="stat-value blue">{{ stats.ouverts }}</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">En cours</p>
+        <p class="stat-value amber">{{ stats.enCours }}</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Résolus</p>
+        <p class="stat-value green">{{ stats.resolus }}</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Total</p>
+        <p class="stat-value">{{ tickets.length }}</p>
+      </div>
+    </div>
+
+    <!-- Tableau -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Derniers tickets</h2>
+        <a routerLink="/admin/tickets" class="voir-tout">Voir tout →</a>
+      </div>
+
+      <div *ngIf="chargement" class="chargement">Chargement...</div>
+
+      <table *ngIf="!chargement" class="tableau">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Titre</th>
+            <th>Priorité</th>
+            <th>Statut</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ticket of tickets.slice(0, 5)">
+            <td class="id-col">#{{ ticket.id }}</td>
+            <td class="titre-col">{{ ticket.title }}</td>
+            <td><span [class]="'badge ' + couleurPriorite(ticket.priority)">{{ ticket.priority }}</span></td>
+            <td><span [class]="'badge ' + couleurStatut(ticket.status)">{{ ticket.status }}</span></td>
+            <td class="date-col">{{ ticket.created | date:'dd/MM' }}</td>
+            <td>
+              <a [routerLink]="['/user/conversation', ticket.conversationId]" class="btn-voir">Voir</a>
+            </td>
+          </tr>
+          <tr *ngIf="tickets.length === 0">
+            <td colspan="6" class="vide">Aucun ticket pour le moment.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
