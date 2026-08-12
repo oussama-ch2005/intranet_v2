@@ -3,36 +3,39 @@ import {Login} from './pages/login/login'
 import {authGuard} from './core/guards/auth-guard';
 import {adminGuard} from './core/guards/admin-guard';
 import {Dashboard} from './pages/admin/dashboard/dashboard';
-import {Tickets} from './pages/admin/tickets/tickets';
+import {Objets} from './pages/admin/objets/objets';
 import {Users} from './pages/admin/users/users';
-import {MesTickets} from './pages/user/mes-tickets/mes-tickets';
+import {MesObjets} from './pages/user/mes-objets/mes-objets';
 import {Conversation} from './pages/user/conversation/conversation';
+import { Liste } from './pages/objets/liste/liste'; 
+import { Detail } from './pages/objets/detail/detail';
 
 
 export const routes: Routes = [
+  { path: 'login', component: Login },
 
-  // route public
-  {path:'login',component:Login},
-  //route admin - protege par authguard + admin guard
-  {
-    path:"admin",canActivate:[authGuard,adminGuard],children:[
-      {path:'dashboard',component:Dashboard},
-      {path:"tickets",component:Tickets},
-      {path:"users",component:Users},
-      {path:'',redirectTo:'dashboard',pathMatch:'full'}
+  { path: 'objets', canActivate: [authGuard], children: [
+    { path: 'liste',    component: Liste },
+    { path: 'detail/:id', component: Detail },
+    { path: '', redirectTo: 'liste', pathMatch: 'full' }
+  ]},
 
-    ]},
+  { path: 'admin', canActivate: [authGuard, adminGuard], children: [
+    { path: 'dashboard', component: Dashboard },
+    { path: 'objets',   component: Objets},
+    { path: 'users',     component: Users },
+    { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+  ]},
+
+
   //routes utilisateur - protege par authGuard
   {path:'user',canActivate:[authGuard],children:[
-      {path:"tickets",component:MesTickets },
+      {path:"mes-objets",component:MesObjets },
       {path: "conversation/:id",component:Conversation},
-      {path:'',redirectTo: 'tickets',pathMatch: "full"}
+      {path:'',redirectTo: 'mes-objets',pathMatch: "full"}
+  ]},
+  
 
-    ]},
-  //redirection par defeut
-  {path:'',redirectTo:'login',pathMatch:"full"},
-  {path:'**',redirectTo:"login"}
-
-
-
+  { path: '', redirectTo: 'objets/liste', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login' }
 ];

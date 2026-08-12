@@ -1,4 +1,6 @@
 <aside class="sidebar">
+
+
   <div class="sidebar-header">
     <div class="logo">I</div>
     <div>
@@ -12,8 +14,8 @@
     <a routerLink="/admin/dashboard" routerLinkActive="active">
       <i class="icon">⊞</i> Tableau de bord
     </a>
-    <a routerLink="/admin/tickets" routerLinkActive="active">
-      <i class="icon">🎫</i> Tickets
+    <a routerLink="/admin/objets" routerLinkActive="active">
+      <i class="icon">🎫</i> Objet
     </a>
     <a routerLink="/admin/users" routerLinkActive="active">
       <i class="icon">👥</i> Utilisateurs
@@ -22,8 +24,8 @@
 
   <!-- Menu Utilisateur -->
   <nav *ngIf="!auth.estAdmin()">
-    <a routerLink="/user/tickets" routerLinkActive="active">
-      <i class="icon">🎫</i> Mes tickets
+    <a routerLink="/user/mes-objets" routerLinkActive="active">
+      <i class="icon">🎫</i> Mes objets
     </a>
     <a routerLink="/user/conversation" routerLinkActive="active">
       <i class="icon">💬</i> Messages

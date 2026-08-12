@@ -12,16 +12,16 @@ import { Object } from '../../../core/service/object';
   styleUrl: './dashboard.css'
 })
 export class Dashboard implements OnInit {
-  tickets: any[] = [];
+  objets: any[] = [];
   stats = { ouverts: 0, enCours: 0, resolus: 0 };
   chargement = true;
 
   constructor(private object: Object) {}
 
   ngOnInit() {
-    this.object.listerParType('TICKET').subscribe({
+    this.object.listerParType('O').subscribe({
       next: (data: any) => {
-        this.tickets = data;
+        this.objets = data;
         this.stats.ouverts  = data.filter((t: any) => t.status === 'OUVERT').length;
         this.stats.enCours  = data.filter((t: any) => t.status === 'EN_COURS').length;
         this.stats.resolus  = data.filter((t: any) => t.status === 'RESOLU').length;
@@ -50,4 +50,16 @@ export class Dashboard implements OnInit {
     };
     return map[priorite] || 'badge-gray';
   }
+
+  
+  // Fonction pour déterminer la couleur en fonction du type
+//  couleurType(type: string): string {
+  //  const map: any = {
+  //    'ticket': 'badge-red',
+  //    'QUESTION': 'badge-amber',
+  //    'SUGGESTION': 'badge-blue',
+  //    'RECLAMATION': 'badge-green'
+  //  };
+  //  return map[type] || 'badge-gray';
+ // }
 }

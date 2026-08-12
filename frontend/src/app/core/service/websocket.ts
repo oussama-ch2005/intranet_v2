@@ -1,5 +1,5 @@
 // src/app/core/services/websocket.service.ts
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { Subject } from 'rxjs';
@@ -13,6 +13,9 @@ export class WebsocketService {
   messageRecu$ = new Subject<any>();
   notificationRecue$ = new Subject<string>();
 
+  // ✅ Injectez NgZone
+  constructor(private ngZone: NgZone) {}
+
   connecter(email: string) {
     this.client = new Client({
       webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
@@ -21,7 +24,9 @@ export class WebsocketService {
 
         // S'abonner aux notifications privées
         this.client.subscribe(`/user/queue/notifications`, (msg) => {
-          this.notificationRecue$.next(msg.body);
+         this.ngZone.run(() => {
+            this.notificationRecue$.next(msg.body);
+          });
         });
       }
     });
@@ -34,8 +39,11 @@ export class WebsocketService {
     this.client.subscribe(
       `/topic/conversation/${conversationId}`,
       (msg) => {
-        const message = JSON.parse(msg.body);
+        this.ngZone.run(() => {
+          const message = JSON.parse(msg.body);
         this.messageRecu$.next(message);
+        })
+        
       }
     );
   }

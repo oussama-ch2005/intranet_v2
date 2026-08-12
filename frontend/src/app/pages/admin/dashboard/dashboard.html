@@ -4,13 +4,13 @@
   <main class="main-content">
     <div class="page-header">
       <h1>Tableau de bord</h1>
-      <button class="btn-primary" routerLink="/admin/tickets">+ Nouveau ticket</button>
+      <button class="btn-primary" routerLink="/admin/objets">+ Nouveau </button>
     </div>
 
     <!-- Stats -->
     <div class="stats-grid">
       <div class="stat-card">
-        <p class="stat-label">Tickets ouverts</p>
+        <p class="stat-label">Objet ouverts</p>
         <p class="stat-value blue">{{ stats.ouverts }}</p>
       </div>
       <div class="stat-card">
@@ -23,15 +23,15 @@
       </div>
       <div class="stat-card">
         <p class="stat-label">Total</p>
-        <p class="stat-value">{{ tickets.length }}</p>
+        <p class="stat-value">{{ objets.length }}</p>
       </div>
     </div>
 
     <!-- Tableau -->
     <div class="card">
       <div class="card-header">
-        <h2>Derniers tickets</h2>
-        <a routerLink="/admin/tickets" class="voir-tout">Voir tout →</a>
+        <h2>Derniers Objet</h2>
+        <a routerLink="/admin/objets" class="voir-tout">Voir tout →</a>
       </div>
 
       <div *ngIf="chargement" class="chargement">Chargement...</div>
@@ -48,18 +48,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let ticket of tickets.slice(0, 5)">
-            <td class="id-col">#{{ ticket.id }}</td>
-            <td class="titre-col">{{ ticket.title }}</td>
-            <td><span [class]="'badge ' + couleurPriorite(ticket.priority)">{{ ticket.priority }}</span></td>
-            <td><span [class]="'badge ' + couleurStatut(ticket.status)">{{ ticket.status }}</span></td>
-            <td class="date-col">{{ ticket.created | date:'dd/MM' }}</td>
+          <tr *ngFor="let objet of objets.slice(0, 5)">
+            <td class="id-col">#{{ objet.id }}</td>
+            <td class="titre-col">{{ objet.title }}</td>
+            <td><span [class]="'badge ' + couleurPriorite(objet.priority)">{{ objet.priority }}</span></td>
+            <td><span [class]="'badge ' + couleurStatut(objet.status)">{{ objet.status }}</span></td>
+            <td class="date-col">{{ objet.created | date:'dd/MM' }}</td>
             <td>
-              <a [routerLink]="['/user/conversation', ticket.conversationId]" class="btn-voir">Voir</a>
+              <a [routerLink]="['/user/conversation', objet.conversationId]" class="btn-voir">Voir</a>
             </td>
           </tr>
-          <tr *ngIf="tickets.length === 0">
-            <td colspan="6" class="vide">Aucun ticket pour le moment.</td>
+          <tr *ngIf="objets.length === 0">
+            <td colspan="6" class="vide">Aucun Objet pour le moment.</td>
           </tr>
         </tbody>
       </table>

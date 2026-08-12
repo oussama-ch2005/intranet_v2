@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable({providedIn:'root'})
 export class Object {
-    private apiUrl="http://localhost:8080/api/object";
+    private apiUrl="http://localhost:8080/api/objet";
 
     constructor(private http: HttpClient) {}
     creer(data:any){

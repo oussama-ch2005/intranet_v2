@@ -9,8 +9,8 @@ export class Conversation {
   obtenirParId(id: number) {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
-  obtenirOuCreer(objectId:number){
-    return this.http.get(`${this.apiUrl}/object/${objectId}`);
+  obtenirOuCreer(objetId:number){
+    return this.http.get(`${this.apiUrl}/object/${objetId}`);
   }
   
 }

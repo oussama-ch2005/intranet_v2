@@ -1,0 +1,113 @@
+!
+<div class="layout">
+  <app-sidebar></app-sidebar>
+
+  <main class="main">
+
+    <!-- En-tête -->
+    <div class="header">
+      <div>
+        <h1>Objets métier</h1>
+        <p class="subtitle">Chaque objet possède son fil de discussion rattaché</p>
+      </div>
+      <button class="btn-primary" (click)="showModal = true">
+        + Nouveau {{ labelType(typeSelectionne) | lowercase }}
+      </button>
+    </div>
+
+    <!-- Onglets par type -->
+    <div class="type-tabs">
+      <button
+        *ngFor="let t of types"
+        [class]="'type-tab ' + (typeSelectionne === t.valeur ? 'active' : '')"
+        (click)="changerType(t.valeur)"
+      >
+        <span>{{ t.icone }}</span> {{ t.label }}
+        <span class="count" *ngIf="typeSelectionne === t.valeur">
+          {{ objetsFiltres.length }}
+        </span>
+      </button>
+    </div>
+
+    <!-- Recherche -->
+    <div class="search-bar">
+      <input
+        type="text"
+        placeholder="Rechercher..."
+        [(ngModel)]="recherche"
+        (input)="filtrer()"
+      />
+    </div>
+
+    <!-- Chargement -->
+    <div *ngIf="chargement" class="loading">Chargement...</div>
+
+    <!-- Liste des objets -->
+    <div *ngIf="!chargement" class="objets-list">
+      <div
+        *ngFor="let objet of objetsFiltres"
+        class="objet-row"
+        (click)="ouvrirDetail(objet)"
+      >
+        <div class="objet-left">
+          <span class="objet-id">#{{ objet.id }}</span>
+          <div class="objet-info">
+            <p class="objet-title">{{ objet.title }}</p>
+            <p class="objet-desc">{{ objet.description | slice:0:80 }}...</p>
+          </div>
+        </div>
+
+        <div class="objet-right">
+          <span [class]="'badge ' + badgePriorite(objet.priority)">{{ objet.priority }}</span>
+          <span [class]="'badge ' + badgeStatut(objet.status)">{{ objet.status }}</span>
+          <div class="conversation-hint">
+            💬 Fil de discussion →
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="objetsFiltres.length === 0" class="empty">
+        <p>Aucun {{ labelType(typeSelectionne) | lowercase }} pour le moment.</p>
+        <button class="btn-primary" (click)="showModal = true">
+          Créer le premier
+        </button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Modal création -->
+<div class="modal-overlay" *ngIf="showModal" (click)="showModal = false">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Nouveau {{ labelType(typeSelectionne) | lowercase }}</h2>
+      <button class="btn-close" (click)="showModal = false">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Titre</label>
+        <input type="text" [(ngModel)]="nouvelObjet.title" placeholder="Titre de l'objet" />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea [(ngModel)]="nouvelObjet.description" rows="3" placeholder="Décrivez en détail..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Priorité</label>
+        <select [(ngModel)]="nouvelObjet.priority">
+          <option value="FAIBLE">Faible</option>
+          <option value="NORMALE">Normale</option>
+          <option value="HAUTE">Haute</option>
+          <option value="URGENTE">Urgente</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="showModal = false">Annuler</button>
+      <button class="btn-primary" (click)="creer()" [disabled]="!nouvelObjet.title">
+        Créer et ouvrir le fil
+      </button>
+    </div>
+  </div>
+</div>
