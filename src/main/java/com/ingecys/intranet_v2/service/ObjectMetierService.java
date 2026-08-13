@@ -98,6 +98,14 @@ public class ObjectMetierService {
                 .map(this::mapper)
                 .collect(Collectors.toList());
     }
+    public List<ObjectMetierResponse> ListerParUtilisateur(String email){
+        User user=userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+        return objectMetierRepository.findByCreatedById(user.getId())
+                .stream()
+                .map(this::mapper)
+                .collect(Collectors.toList());
+    }
 
 
 

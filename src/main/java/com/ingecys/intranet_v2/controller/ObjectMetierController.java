@@ -40,10 +40,20 @@ public class ObjectMetierController {
                 objectMetierService.changerStatus(id,status)
         );
     }
+
     @GetMapping("/type/{typeObject}")
     public ResponseEntity<List<ObjectMetierResponse>> listerparType(
             @PathVariable String typeObject
     ){return ResponseEntity.ok(objectMetierService.ListerParType(typeObject));}
+
+
+
+    @GetMapping("/mes-objets")
+    public ResponseEntity<List<ObjectMetierResponse>> mesObjets(
+            Authentication auth){
+        String email=auth.getName();
+        return ResponseEntity.ok(objectMetierService.ListerParUtilisateur(email));
+    }
 }
 
 
