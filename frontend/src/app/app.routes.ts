@@ -36,6 +36,6 @@ export const routes: Routes = [
   ]},
   
 
-  { path: '', redirectTo: 'objets/liste', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
 ];

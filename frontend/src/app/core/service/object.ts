@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable({providedIn:'root'})
 export class Object {
-    private apiUrl="http://localhost:8080/api/objet";
+    private apiUrl="http://localhost:8080/api/objects";
 
     constructor(private http: HttpClient) {}
     creer(data:any){
@@ -15,6 +15,10 @@ export class Object {
     obtenirParId(id:number){
         return this.http.get(`${this.apiUrl}/${id}`);
     }
+
+    listerTous(){
+        return this.http.get(`${this.apiUrl}`);
+    }   
 
     listerParType(type:string){
         return this.http.get(`${this.apiUrl}/type/${type}`);

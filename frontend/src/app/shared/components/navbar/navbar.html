@@ -1,1 +1,102 @@
-<p>navbar works!</p>
+<!-- Overlay transparent pour fermer les menus -->
+<div class="overlay" *ngIf="showNotifs || showProfil" (click)="fermerMenus()"></div>
+
+
+<header class="navbar">
+
+  <!-- Titre de la page courante -->
+  <div class="navbar-left">
+    <h2 class="page-titre">{{ titre }}</h2>
+  </div>
+
+  <!-- Recherche -->
+  <div class="navbar-center">
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        [(ngModel)]="recherche"
+        placeholder="Rechercher un objet..."
+        (keyup.enter)="rechercherObjet()"
+      />
+    </div>
+  </div>
+
+  <!-- Actions droite -->
+  <div class="navbar-right">
+
+    <!-- Notifications -->
+    <div class="notif-wrapper">
+      <button class="icon-btn" (click)="toggleNotifs()" [class.active]="showNotifs">
+        🔔
+        <span class="badge-count" *ngIf="notifications.length > 0">
+          {{ notifications.length }}
+        </span>
+      </button>
+
+      <!-- Dropdown notifications -->
+      <div class="dropdown notif-dropdown" *ngIf="showNotifs">
+        <div class="dropdown-head">
+          <span class="dropdown-title">Notifications</span>
+          <button *ngIf="notifications.length > 0" class="btn-tout-lire" (click)="marquerToutesLues()">
+            Tout marquer comme lu
+          </button>
+        </div>
+
+        <div class="notif-list">
+          <div *ngIf="notifications.length === 0" class="notif-empty">
+            Aucune notification non lue
+          </div>
+
+          <div
+            *ngFor="let n of notifications"
+            class="notif-item"
+            (click)="marquerLue(n.id)"
+          >
+            <div class="notif-icon">💬</div>
+            <div class="notif-content">
+              <p class="notif-text">Vous avez été mentionné dans un message</p>
+              <p class="notif-time">{{ n.dateNotif | date:'dd/MM à HH:mm' }}</p>
+            </div>
+            <div class="notif-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profil -->
+    <div class="profil-wrapper">
+      <button class="profil-btn" (click)="toggleProfil()" [class.active]="showProfil">
+        <div class="avatar">{{ initiales() }}</div>
+        <div class="profil-info">
+          <span class="profil-email">{{ auth.getEmail()?.split('@')?.[0] }}</span>
+          <span class="profil-role">{{ auth.getRole() }}</span>
+        </div>
+        <span class="chevron">{{ showProfil ? '▲' : '▼' }}</span>
+      </button>
+
+      <!-- Dropdown profil -->
+      <div class="dropdown profil-dropdown" *ngIf="showProfil">
+        <div class="profil-info-full">
+          <div class="avatar avatar-lg">{{ initiales() }}</div>
+          <div>
+            <p class="pi-email">{{ auth.getEmail() }}</p>
+            <p class="pi-role">{{ auth.getRole() }}</p>
+          </div>
+        </div>
+        <div class="dropdown-sep"></div>
+        <button class="dropdown-item" routerLink="/user/dashboard" (click)="fermerMenus()">
+          🏠 Mon espace
+        </button>
+        <button class="dropdown-item" routerLink="/admin/dashboard" *ngIf="auth.estAdmin()" (click)="fermerMenus()">
+          ⊞ Dashboard admin
+        </button>
+        <div class="dropdown-sep"></div>
+        <button class="dropdown-item danger" (click)="auth.deconnecter()">
+          🚪 Déconnexion
+        </button>
+      </div>
+    </div>
+
+  </div>
+</header>

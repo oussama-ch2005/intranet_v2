@@ -32,7 +32,7 @@ export class Login {
         if(response.role==="ADMIN"){
           this.router.navigate(['/admin/dashboard']);
         }else{
-          this.router.navigate(['/user/tickets']);
+          this.router.navigate(['/user/mes-objets']);
         }
       },
       error: () => {

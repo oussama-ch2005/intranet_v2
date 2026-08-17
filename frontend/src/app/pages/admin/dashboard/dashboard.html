@@ -2,6 +2,7 @@
   <app-sidebar></app-sidebar>
 
   <main class="main-content">
+    <app-navbar titre="Tableau de bord"></app-navbar>  <!-- ✅ -->
     <div class="page-header">
       <h1>Tableau de bord</h1>
       <button class="btn-primary" routerLink="/admin/objets">+ Nouveau </button>
@@ -41,16 +42,21 @@
           <tr>
             <th>#</th>
             <th>Titre</th>
+            <th>createur</th>
+            <th>type</th>
             <th>Priorité</th>
             <th>Statut</th>
             <th>Date</th>
             <th>Action</th>
+
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let objet of objets.slice(0, 5)">
             <td class="id-col">#{{ objet.id }}</td>
             <td class="titre-col">{{ objet.title }}</td>
+            <td class="creator-col">{{ objet.creepar }}</td>
+            <td class="type-col"><span [class]="'badge ' + couleurType(objet.typeObject)">  {{ objet.typeObject }}</span></td>
             <td><span [class]="'badge ' + couleurPriorite(objet.priority)">{{ objet.priority }}</span></td>
             <td><span [class]="'badge ' + couleurStatut(objet.status)">{{ objet.status }}</span></td>
             <td class="date-col">{{ objet.created | date:'dd/MM' }}</td>

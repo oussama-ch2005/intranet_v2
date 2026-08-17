@@ -24,7 +24,11 @@ public class ObjectMetierController {
                 (objectMetierService.creer(request,auth.getName())
                 );}
 
-
+    @GetMapping
+    public ResponseEntity<List<ObjectMetierResponse>> ListerTous()
+    {
+        return  ResponseEntity.ok(objectMetierService.ListerTous());
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ObjectMetierResponse> obtenirParId(@PathVariable Long id){

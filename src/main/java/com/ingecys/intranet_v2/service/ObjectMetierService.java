@@ -106,6 +106,12 @@ public class ObjectMetierService {
                 .map(this::mapper)
                 .collect(Collectors.toList());
     }
+    public List<ObjectMetierResponse> ListerTous(){
+        return objectMetierRepository.findAll()
+                .stream()
+                .map(this::mapper)
+                .collect(Collectors.toList());
+    }
 
 
 

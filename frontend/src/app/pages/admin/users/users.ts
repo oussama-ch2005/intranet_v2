@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Sidebar } from '../../../shared/components/sidebar/sidebar';
@@ -16,13 +16,16 @@ export class Users implements OnInit {
   users: any[] = [];
   chargement=true;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
+
     this.http.get<any[]>('http://localhost:8080/api/users').subscribe({
       next: (data) => {
+        console.log(data);
         this.users = data;
         this.chargement=false;
+        this.cdr.detectChanges();   //pour detecter les changements
       },
       error: () => this.chargement=false
     });
