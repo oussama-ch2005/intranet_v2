@@ -21,4 +21,18 @@ import { Conversation
   templateUrl: './detail.html',
   styleUrl: './detail.css',
 })
-export class Detail {}
+//a acomplir
+
+export class Detail {
+
+  constructor(
+    public auth:Auth,
+    private router:Router,
+    private route:ActivatedRoute,
+    private object:Object,
+    private conversation:Conversation,
+    private message:Message,
+    private websocket:Websocket,
+    private cdr: ChangeDetectorRef
+  ) {}
+}
