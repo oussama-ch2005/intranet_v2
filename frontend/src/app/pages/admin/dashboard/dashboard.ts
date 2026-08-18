@@ -39,7 +39,7 @@ export class Dashboard implements OnInit {
   couleurStatut(statut: string): string {
     const map: any = {
       'OUVERT': 'badge-blue',
-      'EN_COURS': 'badge-amber',
+      'ENCOURS': 'badge-amber',
       'RESOLU': 'badge-green',
       'FERME': 'badge-gray'
     };
@@ -49,7 +49,7 @@ export class Dashboard implements OnInit {
   couleurPriorite(priorite: string): string {
     const map: any = {
       'URGENTE': 'badge-red',
-      'HAUTE': 'badge-amber',
+      'HAUT': 'badge-amber',
       'NORMALE': 'badge-blue',
       'FAIBLE': 'badge-gray'
     };

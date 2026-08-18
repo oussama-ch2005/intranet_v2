@@ -36,7 +36,7 @@
                          <td>
                             <span [class]="user.role==='ADMIN'?'badge-red':'badge-blue'">{{ user.role }}</span>
                          </td>
-                         <td class="muted">{{ user.created | date:'dd/MM/yyyy' }}</td>
+                         <td class="muted">{{ user.dateCreation | date:'dd/MM/yyyy' }}</td>
 
                     </tr>
                     <tr *ngIf="users.length === 0">

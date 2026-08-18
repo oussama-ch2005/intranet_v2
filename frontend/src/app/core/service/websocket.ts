@@ -5,8 +5,7 @@ import SockJS from 'sockjs-client';
 import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class WebsocketService {
-
+export class Websocket{
   private client!: Client;
 
   // Observables pour recevoir les messages

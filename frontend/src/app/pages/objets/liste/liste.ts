@@ -1,4 +1,4 @@
-import { Component,OnInit } from '@angular/core';
+import { Component,OnInit,ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {Router} from '@angular/router';
@@ -36,9 +36,10 @@ export class Liste implements OnInit {
     priority:'NORMAL'
 
   };
-  constructor(private object: Object,private router :Router) {}
+  constructor(private object: Object,private router :Router,private cdr: ChangeDetectorRef) {}
   ngOnInit() {
     this.charger();
+
   }
 
 
@@ -49,6 +50,8 @@ export class Liste implements OnInit {
         this.objets=data;
         this.filtrer();
         this.chargement = false;
+        // Force Angular à mettre à jour l'affichage
+        this.cdr.detectChanges();
 
       },
       error: () => this.chargement = false
@@ -60,12 +63,18 @@ export class Liste implements OnInit {
     this.charger();
   }
 
-  filtrer(){
-
-    this.objetsFiltres=this.objets.filter(o=>
-      o.title?.tolowerCase().includes(this.recherche.toLowerCase())
-
-    );
+  filtrer() {
+  this.objetsFiltres = this.objets.filter(o =>
+    o.title?.toLowerCase().includes(this.recherche.toLowerCase()));
+  
+    this.objetsFiltres.sort((a, b) => {
+      
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return dateB.getTime() - dateA.getTime();
+    })
+    
+  ;
   }
 
   ouvrirDetail(objet:any){
@@ -88,24 +97,26 @@ export class Liste implements OnInit {
     });
   }
 
-  badgeStatut(s:string){
-    const m:any={
-      'OUVERT':'badge-blue',
-      'EN_COURS':'badge-amber',
-      'RESOLU':'badge-green',
-      'FERME':'badge-gray'
+ 
+  couleurStatut(statut: string): string {
+    const map: any = {
+      'OUVERT': 'badge-blue',
+      'ENCOURS': 'badge-amber',
+      'RESOLU': 'badge-green',
+      'FERME': 'badge-gray'
     };
-    return m[s] || 'badge-gray';
+    return map[statut] || 'badge-gray';
   }
-  badgePriorite(p:string){
-    const m:any={
-      'URGENTE':'badge-red',
-      'HAUTE':'badge-amber',
-      'NORMALE':'badge-blue',
-      'FAIBLE':'badge-gray'
+   couleurPriorite(priorite: string): string {
+    const map: any = {
+      'URGENTE': 'badge-red',
+      'HAUT': 'badge-amber',
+      'NORMALE': 'badge-blue',
+      'FAIBLE': 'badge-gray'
     };
-    return m[p] || 'badge-gray';
+    return map[priorite] || 'badge-gray';
   }
+
   labelType(valeur:string){
     return this.types.find(t=> t.valeur===valeur)?.label || '';
   }

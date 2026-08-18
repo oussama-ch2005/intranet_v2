@@ -7,10 +7,10 @@ export class Conversation {
   constructor(private http: HttpClient) {}
 
   obtenirParId(id: number) {
-    return this.http.get(`${this.apiUrl}/${id}`);
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
-  obtenirOuCreer(objetId:number){
-    return this.http.get(`${this.apiUrl}/object/${objetId}`);
+  obtenirOuCreerParId(objetId:number){
+    return this.http.get<any>(`${this.apiUrl}/object/${objetId}`);
   }
   
 }

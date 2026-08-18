@@ -1,5 +1,13 @@
-.layout { display: flex; min-height: 100vh; background: #f9fafb; }
-.main-content { margin-left: 220px; flex: 1; padding: 28px; }
+.layout {
+   display: flex;
+    min-height: 100vh; 
+    background: #f9fafb;
+   }
+.main-content {
+   margin-left: 220px;
+    flex: 1;
+     padding: 28px; 
+}
 
 .page-header {
   display: flex;
@@ -7,7 +15,12 @@
   align-items: center;
   margin-bottom: 24px;
 }
-.page-header h1 { font-size: 20px; font-weight: 600; color: #111; margin: 0; }
+.page-header h1 { 
+  font-size: 20px; 
+  font-weight: 600; 
+  color: #111; 
+  margin: 0;
+ }
 
 .btn-primary {
   background: #111;
@@ -19,7 +32,9 @@
   font-weight: 500;
   cursor: pointer;
 }
-.btn-primary:hover { background: #374151; }
+.btn-primary:hover {
+   background: #374151;
+   }
 
 .stats-grid {
   display: grid;

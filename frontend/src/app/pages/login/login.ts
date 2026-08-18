@@ -18,7 +18,7 @@ export class Login {
   erreur='';
   chargement=false;
 
-  constructor(private auth:Auth,private router :Router) {}
+  constructor(private auth:Auth,private router :Router,) {}
 
   connecter (){
     this.erreur="";
@@ -32,7 +32,7 @@ export class Login {
         if(response.role==="ADMIN"){
           this.router.navigate(['/admin/dashboard']);
         }else{
-          this.router.navigate(['/user/mes-objets']);
+          this.router.navigate(['/user/dashboard']);
         }
       },
       error: () => {

@@ -5,6 +5,6 @@ public enum TypeObject {
     DEMANDE,
     INTERVENTION,
     TACHE,
-    MATERIAL,
+    MATERIEL,
 
 }

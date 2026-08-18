@@ -8,24 +8,24 @@ export class Object {
 
     constructor(private http: HttpClient) {}
     creer(data:any){
-        return this.http.post(this.apiUrl,data);
+        return this.http.post<any>(this.apiUrl,data);
 
     }
 
     obtenirParId(id:number){
-        return this.http.get(`${this.apiUrl}/${id}`);
+        return this.http.get<any>(`${this.apiUrl}/${id}`);
     }
 
     listerTous(){
-        return this.http.get(`${this.apiUrl}`);
+        return this.http.get<any[]>(`${this.apiUrl}`);
     }   
 
     listerParType(type:string){
-        return this.http.get(`${this.apiUrl}/type/${type}`);
+        return this.http.get<any[]>(`${this.apiUrl}/type/${type}`);
     }
 
     changerStatus(id:number,status:string){
-        return this.http.put(`${this.apiUrl}/${id}/status?status=${status}`,{});
+        return this.http.put<any>(`${this.apiUrl}/${id}/status?status=${status}`,{});
     }
 
 }
