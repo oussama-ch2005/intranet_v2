@@ -16,6 +16,6 @@ export class User {
     }
 
     changerEtat(id: number, active: boolean) {
-        return this.http.patch<any>(`${this.api}/${id}/active?active=${active}`, {});
+        return this.http.put<any>(`${this.api}/${id}/active?active=${active}`, {});
     }
 }

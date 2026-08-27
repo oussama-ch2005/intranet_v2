@@ -39,7 +39,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/user/**").hasRole("ADMIN")//seul admin
                         .requestMatchers(HttpMethod.GET, "/api/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/api/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/objects").authenticated() // ✅ tous les connectés
                         .requestMatchers("/api/objects/mes-objets").authenticated()       // ✅ tous les connectés
                         .anyRequest().authenticated()//necessit user authentifier
