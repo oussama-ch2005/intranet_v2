@@ -1,1 +1,136 @@
-<p>detail works!</p>
+<div class="layout">
+  <app-sidebar></app-sidebar>
+  <div class="main-wrapper">
+    <app-navbar [titre]="objet?.title || 'Détail'"></app-navbar>
+
+    <div *ngIf="chargObjet" class="loading">Chargement...</div>
+
+    <div *ngIf="!chargObjet && objet" class="cols">
+
+      <!-- ── Colonne gauche : détail objet ── -->
+      <div class="col-left">
+        <div class="col-head">
+          <button class="btn-back" (click)="router.navigate(['/objets/liste'])">← Retour</button>
+          <span class="type-badge">{{ icone(objet.typeObject) }} {{ objet.typeObject }}</span>
+        </div>
+        <div class="col-body">
+          <h1 class="objet-title">{{ objet.title }}</h1>
+          <div class="badges">
+            <span [class]="'badge '+badgeStatut(objet.status)">{{ objet.status }}</span>
+            <span [class]="'badge '+badgePriorite(objet.priority)">{{ objet.priority }}</span>
+          </div>
+          <p class="objet-desc">{{ objet.description }}</p>
+          <div class="meta">
+            <div class="meta-row">
+              <span class="meta-k">Créé par</span>
+              <span class="meta-v">{{ objet.creepar || '—' }}</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-k">Date</span>
+              <span class="meta-v">{{ objet.created | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-k">Messages</span>
+              <span class="meta-v">{{ messages.length }}</span>
+            </div>
+          </div>
+
+          <!-- Changer statut (admin seulement) -->
+          <div class="statut-zone" *ngIf="auth.estAdmin()">
+            <p class="zone-label">Changer le statut</p>
+            <div class="statut-btns">
+              <button
+                *ngFor="let s of statuts"
+                [class]="'btn-s ' + (objet.status === s ? 'btn-s-active' : '')"
+                (click)="changerStatut(s)"
+              >{{ s }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Colonne droite : fil de discussion ── -->
+      <div class="col-right">
+
+        <div class="conv-head">
+          <span class="conv-title">💬 Fil de discussion</span>
+          <span class="conv-count">{{ messages.length }} message(s)</span>
+        </div>
+
+        <!-- Messages -->
+        <div class="msg-zone" #msgZone>
+          <div *ngIf="chargConv" class="conv-info">Chargement du fil...</div>
+          <div *ngIf="!chargConv && messages.length === 0" class="conv-info">
+            Aucun message. Commencez la discussion.
+          </div>
+
+          <div
+            *ngFor="let msg of messages"
+            [class]="estMoi(msg) ? 'msg moi' : 'msg autre'"
+          >
+            <!-- Avatar gauche (autre utilisateur) -->
+            <div *ngIf="!estMoi(msg)" class="avatar">
+              {{ msg.auteur?.prenom?.charAt(0) }}{{ msg.auteur?.nom?.charAt(0) }}
+            </div>
+
+            <div class="msg-content">
+              <p *ngIf="!estMoi(msg)" class="msg-author">
+                {{ msg.auteur?.prenom }} {{ msg.auteur?.nom }}
+              </p>
+              <!-- ✅ Mentions affichées en bleu dans le message -->
+              <div [class]="estMoi(msg) ? 'bubble bubble-moi' : 'bubble bubble-autre'">
+                <span *ngFor="let mot of msg.content?.split(' ')"
+                  [class]="mot.startsWith('@') ? 'mention-tag' : ''"
+                >{{ mot }} </span>
+              </div>
+              <p class="msg-time">{{ msg.sent_date | date:'HH:mm' }}</p>
+            </div>
+
+            <!-- Avatar droite (moi) -->
+            <div *ngIf="estMoi(msg)" class="avatar avatar-moi">
+              {{ auth.getEmail()?.charAt(0)?.toUpperCase() }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Zone de saisie avec @mention -->
+        <div class="input-zone">
+          <div class="message-input">
+            <input
+              type="text"
+              [(ngModel)]="nouveauMessage"
+              (ngModelChange)="filtrerUtilisateurs()"
+              placeholder="Écrire un message... (tapez @ pour mentionner)"
+              (keyup.enter)="envoyer()"
+            />
+
+            <!-- ✅ Dropdown des suggestions @mention -->
+            <div *ngIf="rechercheMentionActive" class="mention-suggestions">
+              <button
+                *ngFor="let user of suggestions"
+                type="button"
+                (mousedown)="selectionnerUtilisateur(user)"
+              >
+                <div class="suggestion-avatar">
+                  {{ user.prenom?.charAt(0) }}{{ user.nom?.charAt(0) }}
+                </div>
+                <div class="suggestion-info">
+                  <span class="suggestion-nom">{{ user.nom }}</span>
+                  <span class="suggestion-email">{{ user.email }}</span>
+                </div>
+              </button>
+              <p *ngIf="suggestions.length === 0" class="no-suggestion">
+                Aucun utilisateur trouvé.
+              </p>
+            </div>
+
+          </div>
+          <button class="btn-send" (click)="envoyer()" [disabled]="!nouveauMessage.trim()">
+            Envoyer
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

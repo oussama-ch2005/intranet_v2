@@ -4,6 +4,7 @@ import com.ingecys.intranet_v2.Security.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -35,7 +36,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()//  route de debug
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/user/**").hasRole("ADMIN")//seul admin
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/objects").authenticated() // ✅ tous les connectés
+                        .requestMatchers("/api/objects/mes-objets").authenticated()       // ✅ tous les connectés
                         .anyRequest().authenticated()//necessit user authentifier
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable({providedIn:'root'})
 export class Object {
-    private apiUrl="http://localhost:8080/api/objects";
+    private   apiUrl="http://localhost:8080/api/objects";
 
     constructor(private http: HttpClient) {}
     creer(data:any){
@@ -23,9 +23,9 @@ export class Object {
     listerParType(type:string){
         return this.http.get<any[]>(`${this.apiUrl}/type/${type}`);
     }
+    mesObjets()  { return this.http.get<any[]>(`${this.apiUrl}/mes-objets`); }
 
     changerStatus(id:number,status:string){
         return this.http.put<any>(`${this.apiUrl}/${id}/status?status=${status}`,{});
     }
-
 }

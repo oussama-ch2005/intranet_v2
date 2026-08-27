@@ -1,0 +1,51 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+  <div class="main-wrapper">
+    <app-navbar titre="Mon espace"></app-navbar>
+    <main class="main">
+
+      <div class="welcome">
+        <div>
+          <h1>Bonjour, {{ auth.getEmail()?.split('@')?.[0] }} 👋</h1>
+          <p>Voici un aperçu de vos objets et discussions en cours.</p>
+        </div>
+        <a routerLink="/user/mes-objets" class="btn-primary">+ Nouvel objet</a>
+      </div>
+
+      <div class="stats">
+        <div class="stat stat-blue"><p class="stat-l">Ouverts</p><p class="stat-v">{{ stats.ouverts }}</p></div>
+        <div class="stat stat-amber"><p class="stat-l">En cours</p><p class="stat-v">{{ stats.enCours }}</p></div>
+        <div class="stat stat-green"><p class="stat-l">Résolus</p><p class="stat-v">{{ stats.resolus }}</p></div>
+        <div class="stat"><p class="stat-l">Total</p><p class="stat-v">{{ mesObjets.length }}</p></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Mes derniers objets</h2>
+          <a routerLink="/user/mes-objets" class="link">Voir tout →</a>
+        </div>
+        <div *ngIf="chargement" class="loading">Chargement...</div>
+        <div *ngIf="!chargement && mesObjets.length===0" class="empty">
+          <p>Vous n'avez pas encore créé d'objet.</p>
+          <a routerLink="/user/mes-objets" class="btn-primary">Créer mon premier objet</a>
+        </div>
+        <div *ngIf="!chargement && mesObjets.length>0" class="objet-list">
+          <div *ngFor="let o of mesObjets.slice(0,5)" class="objet-row" (click)="ouvrir(o)">
+            <div class="objet-left">
+              <span class="objet-type">{{ o.typeObject }}</span>
+              <div>
+                <p class="objet-title">{{ o.title }}</p>
+                <p class="objet-desc">{{ o.description | slice:0:70 }}...</p>
+              </div>
+            </div>
+            <div class="objet-right">
+              <span [class]="'badge '+badgeStatut(o.status)">{{ o.status }}</span>
+              <span class="fil">💬 Ouvrir le fil →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>

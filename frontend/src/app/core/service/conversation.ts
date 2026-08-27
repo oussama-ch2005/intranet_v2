@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 @Injectable({providedIn:'root'})
-export class Conversation {
+export class ConversationService {
   private apiUrl = "http://localhost:8080/api/conversations";
 
   constructor(private http: HttpClient) {}

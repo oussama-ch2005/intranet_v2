@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable({providedIn: 'root'})
 export class User {
-    private api="/api/users";
+    private api="http://localhost:8080/api/users";
     constructor(private http: HttpClient) {}
     listerTous() {
         return this.http.get<any[]>(this.api);

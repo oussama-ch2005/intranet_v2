@@ -25,12 +25,15 @@
 
     <ng-container *ngIf="!auth.estAdmin()">
       <p class="nav-section-label">Mon espace</p>
-      <a routerLink="/user/dashboard" routerLinkActive="nav-active" class="nav-item">
+      <a routerLink="/user/user-dashboard" routerLinkActive="nav-active" class="nav-item">
         <span class="nav-icon">🏠</span> Accueil
       </a>
       <a routerLink="/user/mes-objets" routerLinkActive="nav-active" class="nav-item">
         <span class="nav-icon">📂</span> Mes objets
       </a>
+        <a routerLink="/user/mes-mentions" routerLinkActive="nav-active" class="nav-item">
+         <span class="nav-icon">🔔</span> Mes mentions
+       </a>
     </ng-container>
 
   </nav>

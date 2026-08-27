@@ -1,1 +1,72 @@
-<p>mes-objets works!</p>
+<div class="layout">
+  <app-sidebar></app-sidebar>
+  <div class="main-wrapper">
+    <app-navbar titre="Mes objets"></app-navbar>
+    <main class="main">
+
+      <div class="header">
+        <p class="subtitle">Vos tickets, demandes, tâches et interventions</p>
+        <button class="btn-primary" (click)="showModal=true">+ Nouvel objet</button>
+      </div>
+
+      <input class="search" type="text" placeholder="Rechercher..." [(ngModel)]="recherche" (input)="filtrer()"/>
+
+      <div *ngIf="chargement" class="loading">Chargement...</div>
+
+      <div *ngIf="!chargement" class="list">
+        <div *ngIf="objetsFiltres.length===0" class="empty">
+          <div class="empty-icon">📭</div>
+          <p>Aucun objet trouvé.</p>
+          <button class="btn-primary" (click)="showModal=true">Créer mon premier objet</button>
+        </div>
+        <div *ngFor="let o of objetsFiltres" class="row" (click)="ouvrir(o)">
+          <div class="row-left">
+            <div class="type-icon">{{ icone(o.typeObject) }}</div>
+            <div class="row-info">
+              <div class="row-top">
+                <p class="row-title">{{ o.title }}</p>
+                <span class="row-type">{{ o.typeObject }}</span>
+              </div>
+              <p class="row-desc">{{ o.description | slice:0:100 }}...</p>
+              <p class="row-date">Créé le {{ o.created | date:'dd MMMM yyyy' }}</p>
+            </div>
+          </div>
+          <div class="row-right">
+            <span [class]="'badge '+badgePriorite(o.priority)">{{ o.priority }}</span>
+            <span [class]="'badge '+badgeStatut(o.status)">{{ o.status }}</span>
+            <div class="fil-btn">💬 Ouvrir le fil →</div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div class="overlay" *ngIf="showModal" (click)="showModal=false">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-head"><h2>Nouvel objet</h2><button (click)="showModal=false">✕</button></div>
+    <div class="modal-body">
+      <div class="fg">
+        <label>Type</label>
+        <div class="type-grid">
+          <button *ngFor="let t of types" [class]="'type-btn '+(nouvelObjet.typeObject===t.valeur?'type-btn-active':'')" (click)="nouvelObjet.typeObject=t.valeur">
+            {{ t.icone }} {{ t.label }}
+          </button>
+        </div>
+      </div>
+      <div class="fg"><label>Titre</label><input type="text" [(ngModel)]="nouvelObjet.title" placeholder="Décrivez en une ligne..."/></div>
+      <div class="fg"><label>Description</label><textarea [(ngModel)]="nouvelObjet.description" rows="3"></textarea></div>
+      <div class="fg"><label>Priorité</label>
+        <select [(ngModel)]="nouvelObjet.priority">
+          <option value="FAIBLE">Faible</option><option value="NORMALE">Normale</option>
+          <option value="HAUTE">Haute</option><option value="URGENTE">Urgente</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" (click)="showModal=false">Annuler</button>
+      <button class="btn-primary" (click)="creer()" [disabled]="!nouvelObjet.title">Créer et ouvrir le fil</button>
+    </div>
+  </div>
+</div>

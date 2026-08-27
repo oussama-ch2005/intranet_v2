@@ -9,6 +9,8 @@ import {MesObjets} from './pages/user/mes-objets/mes-objets';
 import {Conversation} from './pages/user/conversation/conversation';
 import { Liste } from './pages/objets/liste/liste'; 
 import { Detail } from './pages/objets/detail/detail';
+import { UserDashboard } from './pages/user/user-dashboard/user-dashboard';
+import { MesMentionsComponent } from './pages/user/mes-mentions/mes-mentions';
 
 
 export const routes: Routes = [
@@ -30,8 +32,10 @@ export const routes: Routes = [
 
   //routes utilisateur - protege par authGuard
   {path:'user',canActivate:[authGuard],children:[
+      {path:"user-dashboard",component:UserDashboard },
       {path:"mes-objets",component:MesObjets },
       {path: "conversation/:id",component:Conversation},
+      {path:"mes-mentions",component:MesMentionsComponent },
       {path:'',redirectTo: 'mes-objets',pathMatch: "full"}
   ]},
   

@@ -1,1 +1,48 @@
-<p>conversation works!</p>
+<div class="layout">
+  <app-sidebar></app-sidebar>
+  <div class="main-wrapper">
+    <app-navbar [titre]="conversation?.objetMetierTitle || 'Conversation'"></app-navbar>
+
+    <div *ngIf="chargement" class="loading">Chargement...</div>
+
+    <div *ngIf="!chargement" class="conv-layout">
+
+      <div class="conv-header">
+        <button class="btn-back" (click)="router.navigate(['/user/mes-mentions'])">← Retour</button>
+        <div class="conv-info">
+          <p class="conv-title">{{ conversation?.objetMetierTitle || 'Conversation #' + conversation?.id }}</p>
+          <p class="conv-meta">{{ messages.length }} message(s)</p>
+        </div>
+      </div>
+
+      <div class="msg-zone" #msgZone>
+        <div *ngIf="messages.length === 0" class="conv-empty">Aucun message dans cette conversation.</div>
+
+        <div *ngFor="let msg of messages" [class]="estMoi(msg) ? 'msg moi' : 'msg autre'">
+          <div *ngIf="!estMoi(msg)" class="avatar">
+            {{ msg.auteur?.prenom?.charAt(0) }}{{ msg.auteur?.nom?.charAt(0) }}
+          </div>
+          <div class="msg-content">
+            <p *ngIf="!estMoi(msg)" class="msg-author">{{ msg.auteur?.prenom }} {{ msg.auteur?.nom }}</p>
+            <div [class]="estMoi(msg) ? 'bubble bubble-moi' : 'bubble bubble-autre'">{{ msg.content }}</div>
+            <p class="msg-time">{{ msg.sent_date | date:'HH:mm' }}</p>
+          </div>
+          <div *ngIf="estMoi(msg)" class="avatar avatar-moi">{{ auth.getEmail()?.charAt(0)?.toUpperCase() }}</div>
+        </div>
+      </div>
+
+      <div class="input-zone">
+        <div class="message-input">
+          <input type="text" [(ngModel)]="nouveauMessage" (ngModelChange)="filtrerUtilisateurs()" placeholder="Répondre dans cette conversation..." (keyup.enter)="envoyer()" />
+          <div *ngIf="suggestions.length" class="mention-suggestions">
+            <button *ngFor="let user of suggestions" type="button" (click)="selectionnerUtilisateur(user)">
+              {{ user.prenom }} {{ user.nom }} <span>{{ user.email }}</span>
+            </button>
+          </div>
+        </div>
+        <button class="btn-send" (click)="envoyer()" [disabled]="!nouveauMessage.trim()">Envoyer</button>
+      </div>
+
+    </div>
+  </div>
+</div>

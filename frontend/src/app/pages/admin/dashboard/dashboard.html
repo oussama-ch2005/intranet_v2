@@ -47,7 +47,8 @@
             <th>Priorité</th>
             <th>Statut</th>
             <th>Date</th>
-            <th>Action</th>
+            <th>Details</th>
+            
 
           </tr>
         </thead>
@@ -59,7 +60,7 @@
             <td class="type-col"><span [class]="'badge ' + couleurType(objet.typeObject)">  {{ objet.typeObject }}</span></td>
             <td><span [class]="'badge ' + couleurPriorite(objet.priority)">{{ objet.priority }}</span></td>
             <td><span [class]="'badge ' + couleurStatut(objet.status)">{{ objet.status }}</span></td>
-            <td class="date-col">{{ objet.created | date:'dd/MM' }}</td>
+            <td class="date-col">{{ objet.createdAt | date:'dd/MM/yyyy' }}</td>
             <td>
               <a [routerLink]="['/user/conversation', objet.conversationId]" class="btn-voir">Voir</a>
             </td>

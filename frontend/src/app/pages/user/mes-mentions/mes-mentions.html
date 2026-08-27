@@ -1,0 +1,74 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+  <div class="main-wrapper">
+    <app-navbar titre="Mes mentions"></app-navbar>
+
+    <main class="main">
+
+      <div class="page-header">
+        <div>
+          <h1>Mes mentions</h1>
+          <p class="subtitle">Objets où vous avez été mentionné, du plus récent au plus ancien</p>
+        </div>
+        <span class="count">{{ mentions.length }} mention(s)</span>
+      </div>
+
+      <!-- Chargement -->
+      <div *ngIf="chargement" class="loading">Chargement...</div>
+
+      <!-- Vide -->
+      <div *ngIf="!chargement && mentions.length === 0" class="empty">
+        <div class="empty-icon">🔕</div>
+        <p>Vous n'avez pas encore été mentionné dans une conversation.</p>
+      </div>
+
+      <!-- Une carte par objet, selon sa mention la plus récente -->
+      <div *ngIf="!chargement && mentions.length > 0" class="mentions-list">
+        <div
+          *ngFor="let m of mentions"
+          class="mention-card"
+          (click)="ouvrirConversation(m)"
+        >
+          <!-- En-tête de la carte -->
+          <div class="mention-header">
+            <div class="mention-left">
+              <span class="objet-icon">{{ icone(m.typeObjet) }}</span>
+              <div>
+                <p class="objet-title">{{ m.objetTitle || 'Conversation' }}</p>
+                <span class="objet-type">{{ m.typeObjet }}</span>
+              </div>
+            </div>
+            <div class="mention-meta">
+              <span class="mention-date">{{ m.dateMessage | date:'dd/MM à HH:mm' }}</span>
+              <span class="mention-badge">@mention</span>
+            </div>
+          </div>
+
+          <!-- Qui vous a mentionné -->
+          <div class="mention-by">
+            <div class="avatar-sm">
+              {{ m.mentionneParPrenom?.charAt(0) }}{{ m.mentionneParNom?.charAt(0) }}
+            </div>
+            <span class="mention-by-text">
+              <strong>{{ m.mentionneParPrenom }} {{ m.mentionneParNom }}</strong>
+              vous a mentionné
+            </span>
+          </div>
+
+          <!-- Contenu du message -->
+          <div class="mention-message">
+            <span class="message-quote">"</span>
+            {{ m.messageContent }}
+            <span class="message-quote">"</span>
+          </div>
+
+          <!-- Lien -->
+          <div class="mention-footer">
+            <span class="voir-lien">💬 Voir la conversation →</span>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
