@@ -58,12 +58,15 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
     this.userSvc.listerTous().subscribe({
       next: (users: any) => {
         // L'API peut retourner une liste directe ou une réponse paginée.
+        console.log('reponse api',users);
         this.utilisateurs = Array.isArray(users)
           ? users
           : (users?.content || users?.data || users?.users || []);
+          console.log('utilisateurs après parsing:', this.utilisateurs);
         this.filtrerUtilisateurs();
       },
-      error: () => {
+      error: (err) => {
+        console.error('erruer chegement users', err);
         this.utilisateurs = [];
         this.suggestions = [];
       }
@@ -73,7 +76,7 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   // ──────────────────────────────────────────
-  // ✅ SYSTÈME DE @MENTION
+  // SYSTÈME DE @MENTION
   // ──────────────────────────────────────────
 
   filtrerUtilisateurs() {
@@ -85,6 +88,19 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
         this.mentionsSelectionnees.delete(userId);
       }
     });
+
+     //  Nombre max de mots parmi les noms mentionnables (ex: "Ali Benali" = 2)
+  const maxMots = Math.max(
+    1,
+    ...this.utilisateurs.map(u =>
+      this.nomUtilisateur(u).trim().split(/\s+/).filter(Boolean).length
+    )
+  );
+
+  // Regex dynamique : autorise jusqu'à (maxMots - 1) mots supplémentaires après le premier
+  const regex = new RegExp(
+    `(?:^|\\s)@([^\\s@]*(?:\\s+[^\\s@]*){0,${maxMots - 1}})$`
+  );
 
     // Détecter si l'utilisateur est en train de taper @quelquechose
     const match = this.nouveauMessage.match(/(?:^|\s)@([^\s@]*)$/);
@@ -137,6 +153,68 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
     return nomComplet || user?.username || user?.userName || user?.email || '';
   }
 
+  decouperMessage(contenu: string): { texte: string; mention: boolean }[] {
+    const nomsComposes = this.utilisateurs
+      .map(user => this.nomUtilisateur(user).trim())
+      .filter(nom => nom.split(/\s+/).length > 1)
+      .sort((a, b) => b.length - a.length);
+    const morceaux: { texte: string; mention: boolean }[] = [];
+    let position = 0;
+
+    while (position < contenu.length) {
+      const nom = nomsComposes.find(candidate => {
+        const mention = `@${candidate}`;
+        return contenu.startsWith(mention, position)
+          && (!contenu[position - 1] || /\s/.test(contenu[position - 1]))
+          && (!contenu[position + mention.length] || /\s/.test(contenu[position + mention.length]));
+      });
+
+      if (nom) {
+        const texte = `@${nom}`;
+        morceaux.push({ texte, mention: true });
+        position += texte.length;
+        continue;
+      }
+
+      const debut = position;
+      position++;
+      while (position < contenu.length && !nomsComposes.some(candidate => {
+        const mention = `@${candidate}`;
+        return contenu.startsWith(mention, position)
+          && (!contenu[position - 1] || /\s/.test(contenu[position - 1]));
+      })) {
+        position++;
+      }
+      morceaux.push({ texte: contenu.slice(debut, position), mention: false });
+    }
+
+    return morceaux;
+  }
+
+  estMorceauMentionne(morceaux: string[], index: number): boolean {
+    if (!morceaux[index] || /^\s+$/.test(morceaux[index])) return false;
+
+    const debutMorceau = morceaux
+      .slice(0, index)
+      .reduce((position, morceau) => position + morceau.length, 0);
+    const finMorceau = debutMorceau + morceaux[index].length;
+
+    return Array.from(this.mentionsSelectionnees).some(userId => {
+      const user = this.utilisateurs.find(utilisateur => (utilisateur.id ?? utilisateur.userId) === userId);
+      const nom = user ? this.nomUtilisateur(user) : '';
+      if (!nom) return false;
+
+      const mention = `@${nom}`;
+      let debutMention = this.nouveauMessage.indexOf(mention);
+      while (debutMention !== -1) {
+        const finMention = debutMention + mention.length;
+        if (debutMorceau < finMention && finMorceau > debutMention) return true;
+        debutMention = this.nouveauMessage.indexOf(mention, debutMention + 1);
+      }
+      return false;
+    });
+  }
+
   // ──────────────────────────────────────────
   // CHARGEMENT
   // ──────────────────────────────────────────
@@ -157,6 +235,8 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
       next: (d: any) => {
         this.conversation = d;
         this.messages     = [...(d.messages || [])];
+         console.log('Messages reçus:', this.messages);        // 👈 ajoutez
+         console.log('Email courant:', this.auth.getEmail());  // 👈 ajoutez
         this.chargConv    = false;
         this.shouldScroll = true;
         this.cdr.detectChanges();

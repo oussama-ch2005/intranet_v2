@@ -28,6 +28,7 @@ public class MessageResponde {
         private Long id;
         private String nom;
         private String prenom;
+        private String email;
     }
     @Builder
     @Data

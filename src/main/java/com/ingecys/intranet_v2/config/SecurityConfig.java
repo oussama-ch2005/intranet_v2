@@ -33,16 +33,17 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) //  CORS ici
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//sans session
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/ws/**").permitAll()
-                        .requestMatchers("/api/test/**").permitAll()//  route de debug
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/user/**").hasRole("ADMIN")//seul admin
-                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/objects").authenticated() // ✅ tous les connectés
-                        .requestMatchers("/api/objects/mes-objets").authenticated()       // ✅ tous les connectés
-                        .anyRequest().authenticated()//necessit user authentifier
-                )
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/ws/**").permitAll()
+                .requestMatchers("/api/test/**").permitAll()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers("/api/user/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/users/**").authenticated() // et security filter chain seule ligne pour GET
+                .requestMatchers(HttpMethod.PUT, "/api/users/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/objects").authenticated()
+                .requestMatchers("/api/objects/mes-objets").authenticated()
+                .anyRequest().authenticated()
+        )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

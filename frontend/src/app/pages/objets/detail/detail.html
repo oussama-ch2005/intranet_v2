@@ -77,11 +77,10 @@
               <p *ngIf="!estMoi(msg)" class="msg-author">
                 {{ msg.auteur?.prenom }} {{ msg.auteur?.nom }}
               </p>
-              <!-- ✅ Mentions affichées en bleu dans le message -->
               <div [class]="estMoi(msg) ? 'bubble bubble-moi' : 'bubble bubble-autre'">
-                <span *ngFor="let mot of msg.content?.split(' ')"
-                  [class]="mot.startsWith('@') ? 'mention-tag' : ''"
-                >{{ mot }} </span>
+                <ng-container *ngFor="let morceau of decouperMessage(msg.content)">
+                  <span [class.mention-tag]="morceau.mention">{{ morceau.texte }}</span>
+                </ng-container>
               </div>
               <p class="msg-time">{{ msg.sent_date | date:'HH:mm' }}</p>
             </div>
@@ -96,6 +95,11 @@
         <!-- Zone de saisie avec @mention -->
         <div class="input-zone">
           <div class="message-input">
+            <div class="message-input-highlight" aria-hidden="true">
+              <span *ngFor="let morceau of nouveauMessage.split(/(\s+)/); let index = index"
+                [class.mention-input-tag]="estMorceauMentionne(nouveauMessage.split(/(\s+)/), index)"
+              >{{ morceau }}</span>
+            </div>
             <input
               type="text"
               [(ngModel)]="nouveauMessage"
@@ -104,7 +108,7 @@
               (keyup.enter)="envoyer()"
             />
 
-            <!-- ✅ Dropdown des suggestions @mention -->
+            <!--  Dropdown des suggestions @mention -->
             <div *ngIf="rechercheMentionActive" class="mention-suggestions">
               <button
                 *ngFor="let user of suggestions"

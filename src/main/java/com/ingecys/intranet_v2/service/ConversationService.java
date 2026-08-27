@@ -109,6 +109,7 @@ public class ConversationService {
                         .id(msg.getSender().getId())
                         .nom(msg.getSender().getNom())
                         .prenom(msg.getSender().getPrenom())
+                        .email(msg.getSender().getEmail())
                         .build())
                 .build();
     }

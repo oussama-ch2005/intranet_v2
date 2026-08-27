@@ -133,6 +133,7 @@ public class MessageService {
                         .id(sender.getId())
                         .nom(sender.getNom())
                         .prenom(sender.getPrenom())
+                        .email(sender.getEmail())
                         .build()
                 ).receiver(receiverDto)
                 .pieceJointes(pieceJointeDtos)

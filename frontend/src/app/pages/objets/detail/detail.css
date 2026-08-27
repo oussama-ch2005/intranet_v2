@@ -52,12 +52,27 @@
 .msg-author { font-size: 12px; color: #9ca3af; margin: 0; }
 
 .bubble { padding: 10px 14px; font-size: 14px; line-height: 1.5; word-break: break-word; border-radius: 16px; }
-.bubble-autre { background: white; border: 1px solid #e5e7eb; color: #111; border-radius: 16px 16px 16px 4px; }
-.bubble-moi   { background: #1d4ed8; color: white; border-radius: 16px 16px 4px 16px; }
-
-/* ✅ @mention en bleu dans les bulles */
-.mention-tag { color: #1d4ed8; font-weight: 600; }
-.bubble-moi .mention-tag { color: #bfdbfe; }
+.bubble-autre {
+  background-color: #ffffff;   /* blanc */
+  color: #1f2937;
+  padding: 10px 14px;
+  border-radius: 14px 14px 14px 2px;
+  border: 1px solid #e5e7eb;
+  display: inline-block;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+.bubble-moi {
+  background-color: #2563eb;   /* bleu */
+  color: #ffffff;
+  padding: 10px 14px;
+  border-radius: 14px 14px 2px 14px;
+  display: inline-block;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+.mention-tag { color: #2563eb; font-weight: 600; }
+.bubble-moi .mention-tag { color: #dbeafe; }
 
 .msg-time { font-size: 11px; color: #9ca3af; margin: 0; }
 
@@ -74,6 +89,19 @@
   position: relative;
 }
 
+.message-input-highlight {
+  position: absolute;
+  inset: 1px;
+  padding: 10px 18px;
+  overflow: hidden;
+  white-space: pre;
+  pointer-events: none;
+  color: #111827;
+  font-size: 14px;
+  font-family: inherit;
+}
+.mention-input-tag { color: #2563eb; font-weight: 600; }
+
 .message-input input {
   width: 100%;
   box-sizing: border-box;
@@ -84,8 +112,14 @@
   outline: none;
   font-family: inherit;
   transition: border-color .15s;
+  position: relative;
+  color: transparent;
+  caret-color: #111827;
+  background: transparent;
 }
-.message-input input:focus { border-color: #3b82f6; }
+.message-input input:focus {
+   border-color: #3b82f6; 
+ }
 
 /* ✅ Dropdown suggestions @mention */
 .mention-suggestions {
