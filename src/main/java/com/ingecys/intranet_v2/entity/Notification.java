@@ -25,6 +25,10 @@ public class Notification {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "object_metier_id")
+    private ObjectMetier objectMetier;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_message",nullable = false)
     private Message message;
 

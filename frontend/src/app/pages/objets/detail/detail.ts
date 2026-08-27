@@ -54,7 +54,7 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnInit() {
     this.objetId = +this.route.snapshot.paramMap.get('id')!;
-    // ✅ Charger la liste des utilisateurs pour les @mentions
+    //  Charger la liste des utilisateurs pour les @mentions
     this.userSvc.listerTous().subscribe({
       next: (users: any) => {
         // L'API peut retourner une liste directe ou une réponse paginée.

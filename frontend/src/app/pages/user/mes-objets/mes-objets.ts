@@ -58,5 +58,5 @@ export class MesObjets implements OnInit {
 
   icone(v: string) { return this.types.find(t => t.valeur === v)?.icone || '📄'; }
   badgeStatut(s: string)   { const m: any = { OUVERT:'b-blue', EN_COURS:'b-amber', RESOLU:'b-green', FERME:'b-gray' }; return m[s]||'b-gray'; }
-  badgePriorite(p: string) { const m: any = { URGENTE:'b-red', HAUTE:'b-amber', NORMALE:'b-blue', FAIBLE:'b-gray' };   return m[p]||'b-gray'; }
+  badgePriorite(p: string) { const m: any = { URGENTE:'b-red', HAUT:'b-amber', NORMALE:'b-blue', FAIBLE:'b-gray' };   return m[p]||'b-gray'; }
 }

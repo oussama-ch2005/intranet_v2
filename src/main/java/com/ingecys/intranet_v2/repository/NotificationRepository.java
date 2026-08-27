@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification,Long> {
     //notif non lu
-    @Query("select n from Notification n where n.user.id=:userId and n.lu=false order by n.dateNotif")
+    @Query("select n from Notification n where n.user.id=:userId and n.lu=false order by n.dateNotif DESC ")
     List<Notification> findByUserIdAndLuFalseOrderByDateNotifDesc(Long userId);
     //toutes les notification d'un utilisateur
     @Query("SELECT n FROM Notification n WHERE n.user.id = :userId ORDER BY n.dateNotif DESC")

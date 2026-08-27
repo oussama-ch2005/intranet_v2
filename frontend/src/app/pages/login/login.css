@@ -1,5 +1,7 @@
 
-
+*{
+    font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif;
+}
 .login-container {
     min-height: 100vh;
     display: flex;
@@ -32,7 +34,7 @@
     color: #333;
 }
 h1 {
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif;
     font-size: 24px;
     font-weight: 500;
     margin: 0;
@@ -40,7 +42,7 @@ h1 {
 }
 
 p{
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif;
     font-size: 14px;
     color: #666;
     margin: 0;
@@ -53,7 +55,7 @@ p{
     gap: 6px;
 }
 label {
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif;
     font-size: 14px;
     color: #333;
     margin-bottom: 5px;

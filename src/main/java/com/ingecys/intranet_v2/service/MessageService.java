@@ -88,6 +88,7 @@ public class MessageService {
                 notificationRepository.save(Notification.builder()
                         .user(mentioned)
                         .message(msg)
+                        .objectMetier(conv.getObjetMetier())
                         .type("MENTION")
                         .build());
 

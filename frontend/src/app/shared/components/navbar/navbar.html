@@ -51,11 +51,13 @@
           <div
             *ngFor="let n of notifications"
             class="notif-item"
-            (click)="marquerLue(n.id)"
+            (click)="ouvrirNotification(n)"
           >
             <div class="notif-icon">💬</div>
             <div class="notif-content">
-              <p class="notif-text">Vous avez été mentionné dans un message</p>
+              <p class="notif-text">
+                {{ auteurNotification(n) }} vous a mentionné dans « {{ objetNotification(n) }} »
+              </p>
               <p class="notif-time">{{ n.dateNotif | date:'dd/MM à HH:mm' }}</p>
             </div>
             <div class="notif-dot"></div>

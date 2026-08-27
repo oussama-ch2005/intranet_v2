@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/api/users/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/objects").authenticated()
                 .requestMatchers("/api/objects/mes-objets").authenticated()
+                        .requestMatchers("/api/notifications/**").authenticated()
                 .anyRequest().authenticated()
         )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

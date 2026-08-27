@@ -1,3 +1,6 @@
+*{
+  font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif;
+}
 .layout {
    display: flex;
     min-height: 100vh; 

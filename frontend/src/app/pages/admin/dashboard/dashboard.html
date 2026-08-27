@@ -32,7 +32,7 @@
     <div class="card">
       <div class="card-header">
         <h2>Derniers Objet</h2>
-        <a routerLink="/admin/objets" class="voir-tout">Voir tout →</a>
+        <a routerLink="/objets/liste" class="voir-tout">Voir tout →</a>
       </div>
 
       <div *ngIf="chargement" class="chargement">Chargement...</div>
@@ -62,7 +62,7 @@
             <td><span [class]="'badge ' + couleurStatut(objet.status)">{{ objet.status }}</span></td>
             <td class="date-col">{{ objet.createdAt | date:'dd/MM/yyyy' }}</td>
             <td>
-              <a [routerLink]="['/user/conversation', objet.conversationId]" class="btn-voir">Voir</a>
+              <a [routerLink]="['/objets/detail', objet.id]" class="btn-voir">Voir</a>
             </td>
           </tr>
           <tr *ngIf="objets.length === 0">
