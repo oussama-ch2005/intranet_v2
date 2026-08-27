@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/user/**").hasRole("ADMIN")//seul admin
                         .requestMatchers(HttpMethod.GET, "/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/objects").authenticated() // ✅ tous les connectés
                         .requestMatchers("/api/objects/mes-objets").authenticated()       // ✅ tous les connectés
                         .anyRequest().authenticated()//necessit user authentifier
@@ -52,7 +53,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(List.of("http://localhost:4200"));//les rquette peuvent venir de tout les origine "domainename production"
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));//options preflight cors
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));//options preflight cors
         config.setAllowedHeaders(List.of("*"));//* a changer pour renforcer lea securiter
         config.setAllowCredentials(true);//autorise l envoi d'information  d'authentification(cookies....)
 

@@ -38,11 +38,14 @@ public class User {
     @Column(name= "date_creation")
     private LocalDateTime dateCreation;
 
+    private boolean Active;
+
 
 
     @PrePersist
     public void prePersist() {
         this.dateCreation = LocalDateTime.now();
+        this.Active=true;
     }
 
 

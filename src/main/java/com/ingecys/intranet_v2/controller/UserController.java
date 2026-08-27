@@ -6,7 +6,9 @@ import com.ingecys.intranet_v2.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,5 +29,12 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUser(@PathVariable Long id){
         return ResponseEntity.ok(userService.findById(id));
+    }
+
+    @PatchMapping("/{id}/active")
+    public ResponseEntity<UserResponse> changerActive(
+            @PathVariable Long id,
+            @RequestParam boolean active) {
+        return ResponseEntity.ok(userService.changerActive(id, active));
     }
 }

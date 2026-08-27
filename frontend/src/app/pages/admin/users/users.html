@@ -15,7 +15,9 @@
                         <th>Utilisateur</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <th>État</th>
                         <th>Depuis</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,11 +38,24 @@
                          <td>
                             <span [class]="user.role==='ADMIN'?'badge-red':'badge-blue'">{{ user.role }}</span>
                          </td>
+                         <td>
+                            <span [class]="user.active ? 'status-active' : 'status-inactive'">
+                              {{ user.active ? 'Actif' : 'Désactivé' }}
+                            </span>
+                         </td>
                          <td class="muted">{{ user.dateCreation | date:'dd/MM/yyyy' }}</td>
+                         <td>
+                            <button
+                              class="btn-state"
+                              [class.btn-disable]="user.active"
+                              [class.btn-enable]="!user.active"
+                              (click)="changerEtat(user)"
+                            >{{ user.active ? 'Désactiver' : 'Activer' }}</button>
+                         </td>
 
                     </tr>
                     <tr *ngIf="users.length === 0">
-                        <td colspan="4" class="vide">Aucun utilisateur rencontré.</td>
+                        <td colspan="6" class="vide">Aucun utilisateur rencontré.</td>
                     </tr>
                 </tbody>
             </table>

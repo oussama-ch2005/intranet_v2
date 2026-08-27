@@ -28,6 +28,12 @@ public class UserService {
         return mapper(user);
     }
 
+    public UserResponse changerActive(Long id, boolean active){
+        User user=userRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Utilisateur Introuvable"));
+        user.setActive(active);
+        return mapper(userRepository.save(user));
+    }
 
 
     private UserResponse mapper(User user){
@@ -38,6 +44,7 @@ public class UserService {
                 .prenom(user.getPrenom())
                 .role(user.getRole())
                 .dateCreation(user.getDateCreation())
+                .active(user.isActive())
                 .build();
     }
 

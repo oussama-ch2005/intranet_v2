@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Sidebar } from '../../../shared/components/sidebar/sidebar';
-import { HttpClient } from '@angular/common/http';
+import { User } from '../../../core/service/user';
 
 
 @Component({
@@ -16,13 +16,12 @@ export class Users implements OnInit {
   users: any[] = [];
   chargement=true;
 
-  constructor(private http: HttpClient,private cdr: ChangeDetectorRef) {}
+  constructor(private userSvc: User, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
 
-    this.http.get<any[]>('http://localhost:8080/api/users').subscribe({
+    this.userSvc.listerTous().subscribe({
       next: (data) => {
-        console.log(data);
         this.users = data;
         this.chargement=false;
         this.cdr.detectChanges();   //pour detecter les changements
@@ -35,4 +34,14 @@ export class Users implements OnInit {
   return (prenom?.charAt(0) || '') + (nom?.charAt(0) || '');
  
  }
+
+  changerEtat(user: any) {
+    const nouvelEtat = !user.active;
+    this.userSvc.changerEtat(user.id, nouvelEtat).subscribe({
+      next: (userMisAJour) => {
+        user.active = userMisAJour.active;
+        this.cdr.detectChanges();
+      }
+    });
+  }
 }

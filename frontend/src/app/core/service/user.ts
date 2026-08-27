@@ -14,4 +14,8 @@ export class User {
     obtenirParId(id: number) {
         return this.http.get<any>(`${this.api}/${id}`);
     }
+
+    changerEtat(id: number, active: boolean) {
+        return this.http.patch<any>(`${this.api}/${id}/active?active=${active}`, {});
+    }
 }

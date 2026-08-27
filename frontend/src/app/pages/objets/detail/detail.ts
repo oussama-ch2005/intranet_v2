@@ -201,7 +201,6 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
     this.nouveauMessage = '';
     this.mentionsSelectionnees.clear();
     this.suggestions = [];
-    this.rechercheMentionActive = false;
 
     this.msgSvc.envoyer(this.conversation.id, data).subscribe({
       next: (msgReponse: any) => {

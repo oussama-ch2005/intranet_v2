@@ -35,6 +35,10 @@ public class AuthService {
             System.out.println("MOT DE PASSE INCORRECT");
             throw new RuntimeException("Mot de passe incorrect");
         }
+        if (!user.isActive() && user.getRole().equals("ADMIN")) {
+            System.out.println("compte Inactive");
+            throw new RuntimeException("compte Inactive");
+        }
 
         System.out.println("CONNEXION OK");
         String token = jwtProvider.genererToken(user.getEmail(), user.getRole());
