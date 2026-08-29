@@ -6,12 +6,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Sidebar }           from '../../../shared/components/sidebar/sidebar';
 import { Navbar }            from '../../../shared/components/navbar/navbar';
-import { Object as ObjSvc }  from '../../../core/service/object';    // ✅ alias pour éviter conflit JS
+import { Object as ObjSvc }  from '../../../core/service/object';    //  alias pour éviter conflit JS
 import { ConversationService } from '../../../core/service/conversation';
 import { Message }           from '../../../core/service/message';
 import { Websocket }         from '../../../core/service/websocket';
 import { Auth }              from '../../../core/service/auth';
 import { User }              from '../../../core/service/user';
+import { FileService }    from '../../../core/service/file'; //  nouveau
 
 @Component({
   selector: 'app-detail',
@@ -23,6 +24,7 @@ import { User }              from '../../../core/service/user';
 export class Detail implements OnInit, OnDestroy, AfterViewChecked {
 
   @ViewChild('msgZone') msgZone!: ElementRef;
+    @ViewChild('fileInput')   fileInput!: ElementRef; //  référence input file
 
   objet:          any = null;
   conversation:   any = null;
@@ -33,6 +35,23 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
   rechercheMentionActive = false;
   chargObjet      = true;
   chargConv       = true;
+
+
+  // Fichiers sélectionnés en attente d'envoi
+  fichiersEnAttente: {
+    file: File;
+    preview: string | null;
+    uploading: boolean;
+    uploaded: boolean;
+    url: string;
+    nomFichier: string;
+    typeFichier: string;
+    tailleKo: number;
+    
+  }[] = [];
+
+
+
   private mentionsSelectionnees = new Set<number>();
   private wsSub!: Subscription;
   private objetId!: number;
@@ -49,7 +68,8 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
     private msgSvc:  Message,
     private wsSvc:   Websocket,
     private cdr:     ChangeDetectorRef,
-    private userSvc: User
+    private userSvc: User,
+    public  fileSvc:  FileService  //  injecté en public pour le template
   ) {}
 
   ngOnInit() {
@@ -74,6 +94,83 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
     this.chargerObjet();
     this.chargerConversation();
   }
+
+// ──────────────────────────────────────────
+  // GESTION DES FICHIERS
+  // ──────────────────────────────────────────
+
+ ouvrirSelecteurFichier() {
+    this.fileInput.nativeElement.click();
+  }
+
+   onFichiersSelectionnes(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files) return;
+
+    Array.from(input.files).forEach(file => {
+      // Limite 10 Mo
+      if (file.size > 10 * 1024 * 1024) {
+        alert(`${file.name} dépasse la limite de 10 Mo`);
+        return;
+      }
+
+      const fichierEnAttente = {
+        file,
+        preview:    null as string | null,
+        uploading:  true,
+        uploaded:   false,
+        url:        '',
+        nomFichier: file.name,
+        typeFichier: file.type,
+        tailleKo:   Math.round(file.size / 1024)
+      };
+
+      // Prévisualisation si image
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          fichierEnAttente.preview = e.target?.result as string;
+          this.cdr.detectChanges();
+        };
+        reader.readAsDataURL(file);
+      }
+
+      this.fichiersEnAttente.push(fichierEnAttente);
+
+      // ✅ Upload immédiat
+      this.fileSvc.upload(file).subscribe({
+        next: (res: any) => {
+          fichierEnAttente.uploading = false;
+          fichierEnAttente.uploaded  = true;
+          fichierEnAttente.url       = res.url;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          fichierEnAttente.uploading = false;
+          alert(`Erreur upload : ${file.name}`);
+          this.supprimerFichier(fichierEnAttente);
+        }
+      });
+    });
+
+    // Reset input pour permettre de resélectionner le même fichier
+    
+    input.value = '';
+  }
+
+  supprimerFichier(fichier: any) {
+    this.fichiersEnAttente = this.fichiersEnAttente.filter(f => f !== fichier);
+    this.cdr.detectChanges();
+  }
+
+
+
+
+
+
+
+
+
 
   // ──────────────────────────────────────────
   // SYSTÈME DE @MENTION
@@ -265,15 +362,34 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
   // ENVOI
   // ──────────────────────────────────────────
 
+   peutEnvoyer(): boolean {
+    const aTexte   = this.nouveauMessage.trim().length > 0;
+    const aFichier = this.fichiersEnAttente.length > 0;
+    const tousUploades = this.fichiersEnAttente.every(f => f.uploaded);
+    return (aTexte || aFichier) && tousUploades;
+  }
+
   envoyer() {
-    if (!this.nouveauMessage.trim() || !this.conversation) return;
+    if ((!this.nouveauMessage.trim() && this.fichiersEnAttente.length === 0) || !this.conversation) return;
+    if (this.fichiersEnAttente.some(f => f.uploading)) return;
 
     const contenu = this.nouveauMessage;
+
+     // Construire les pièces jointes depuis les fichiers uploadés
+    const pieceJointeRequests = this.fichiersEnAttente
+      .filter(f => f.uploaded)
+      .map(f => ({
+        nomFichier:  f.nomFichier,
+        url:         f.url,
+        typeFichier: f.typeFichier,
+        tailleKo:    f.tailleKo
+      }));
+    const fichiersEnvoyes = this.fichiersEnAttente.filter(f => f.uploaded);
 
     const data = {
       content:              contenu,
       id_mentiones:         Array.from(this.mentionsSelectionnees),
-      pieceJointeRequests:  [],
+      pieceJointeRequests,
       receiverId:           null
     };
 
@@ -291,6 +407,7 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
           this.shouldScroll = true;
           this.cdr.detectChanges();
         }
+        this.fichiersEnAttente = this.fichiersEnAttente.filter(f => !fichiersEnvoyes.includes(f));
       },
       error: () => {
         //  Remettre le contenu si l'envoi échoue

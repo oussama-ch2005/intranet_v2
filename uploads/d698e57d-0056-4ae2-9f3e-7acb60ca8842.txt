@@ -1,0 +1,20 @@
+void prefix(arbre_rech a){
+    if(!a){
+        exit(-1) ;
+
+    }
+    printf("%d - ",a->val);
+    prefix(a->g);
+    prefix(a->d);
+    printf("\n");
+}
+void infix(arbre_rech a){
+    if(!a){
+        exit(-1);
+
+    }
+    infix(a->g);
+    printf("%d - ",a->val);
+    infix(a->d);
+    printf("/n");
+}

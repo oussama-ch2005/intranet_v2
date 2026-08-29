@@ -103,7 +103,7 @@ public class MessageService {
 
             }
         }
-        //construire la reponse
+        //construire la piece jointe dto
         List<MessageResponde.PieceJointeDto> pieceJointeDtos=piecesJointes.stream()
                 .map(pj->MessageResponde.PieceJointeDto.builder()
                         .id((long) pj.getId())
@@ -114,7 +114,7 @@ public class MessageService {
 
                 ).toList();
 
-
+        //receiver
         MessageResponde.ReceiverDto receiverDto=null;
         if(receiver!=null){
             receiverDto=MessageResponde.ReceiverDto.builder()

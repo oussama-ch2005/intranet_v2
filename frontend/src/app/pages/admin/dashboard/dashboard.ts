@@ -23,7 +23,7 @@ export class Dashboard implements OnInit {
     this.object.listerTous().subscribe({
       next: (data: any) => {
         console.log(data);
-        this.objets = data;
+        this.objets = [...data].sort((a, b) => this.dateCreation(b) - this.dateCreation(a));
         this.stats.ouverts  = data.filter((t: any) => t.status === 'OUVERT').length;
         this.stats.enCours  = data.filter((t: any) => t.status === 'EN_COURS').length;
         this.stats.resolus  = data.filter((t: any) => t.status === 'RESOLU').length;
@@ -34,6 +34,10 @@ export class Dashboard implements OnInit {
       },
       error: () => this.chargement = false
     });
+  }
+
+  private dateCreation(objet: any): number {
+    return new Date(objet.createdAt ?? objet.created).getTime();
   }
 
   couleurStatut(statut: string): string {

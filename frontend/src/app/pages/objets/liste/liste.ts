@@ -68,13 +68,14 @@ export class Liste implements OnInit {
     o.title?.toLowerCase().includes(this.recherche.toLowerCase()));
   
     this.objetsFiltres.sort((a, b) => {
-      
-      const dateA = new Date(a.createdAt);
-      const dateB = new Date(b.createdAt);
-      return dateB.getTime() - dateA.getTime();
+      return this.dateCreation(b) - this.dateCreation(a);
     })
     
   ;
+  }
+
+  private dateCreation(objet: any): number {
+    return new Date(objet.createdAt ?? objet.created).getTime();
   }
 
   ouvrirDetail(objet:any){

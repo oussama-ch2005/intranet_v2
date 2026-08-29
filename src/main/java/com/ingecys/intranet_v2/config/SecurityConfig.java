@@ -33,17 +33,25 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) //  CORS ici
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//sans session
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/ws/**").permitAll()
-                .requestMatchers("/api/test/**").permitAll()
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/api/user/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/users/**").authenticated() // et security filter chain seule ligne pour GET
-                .requestMatchers(HttpMethod.PUT, "/api/users/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/objects").authenticated()
-                .requestMatchers("/api/objects/mes-objets").authenticated()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/api/test/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        //  Règles spécifiques D'ABORD
+                        .requestMatchers(HttpMethod.POST, "/api/files/upload").permitAll() // ou .authenticated() selon ton besoin
+                        .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()      // pour que les <img>/<a> fonctionnent (cf. plus haut)
+
+                        // Règle générale ENSUITE
+                        .requestMatchers("/api/files/**").authenticated()
+
+                        .requestMatchers("/api/user/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/objects").authenticated()
+                        .requestMatchers("/api/objects/mes-objets").authenticated()
                         .requestMatchers("/api/notifications/**").authenticated()
-                .anyRequest().authenticated()
+                        .anyRequest().authenticated()
         )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

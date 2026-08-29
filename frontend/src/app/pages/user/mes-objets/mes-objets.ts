@@ -43,7 +43,16 @@ export class MesObjets implements OnInit {
     });
   }
 
-  filtrer() { this.objetsFiltres = this.objets.filter(o => o.title?.toLowerCase().includes(this.recherche.toLowerCase())); }
+  filtrer() {
+    this.objetsFiltres = this.objets
+      .filter(o => o.title?.toLowerCase().includes(this.recherche.toLowerCase()))
+      .sort((a, b) => this.dateCreation(b) - this.dateCreation(a));
+  }
+
+  private dateCreation(objet: any): number {
+    return new Date(objet.createdAt ?? objet.created).getTime();
+  }
+
   ouvrir(o: any) { this.router.navigate(['/objets/detail', o.id]); }
 
   creer() {

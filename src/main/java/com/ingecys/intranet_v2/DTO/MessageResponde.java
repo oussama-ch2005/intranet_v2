@@ -28,7 +28,7 @@ public class MessageResponde {
         private Long id;
         private String nom;
         private String prenom;
-        private String email;
+        private String email; //pour estMoi()
     }
     @Builder
     @Data
@@ -37,6 +37,7 @@ public class MessageResponde {
         private String nomFichier ;
         private String url;
         private String TypeFichier;
+        private Integer tailleKo;
 
     }
     @Builder

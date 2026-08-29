@@ -7,7 +7,7 @@
 
     <div *ngIf="!chargObjet && objet" class="cols">
 
-      <!-- ── Colonne gauche : détail objet ── -->
+      <!-- ── Colonne gauche ── -->
       <div class="col-left">
         <div class="col-head">
           <button class="btn-back" (click)="router.navigate(['/objets/liste'])">← Retour</button>
@@ -21,37 +21,23 @@
           </div>
           <p class="objet-desc">{{ objet.description }}</p>
           <div class="meta">
-            <div class="meta-row">
-              <span class="meta-k">Créé par</span>
-              <span class="meta-v">{{ objet.creepar || '—' }}</span>
-            </div>
-            <div class="meta-row">
-              <span class="meta-k">Date</span>
-              <span class="meta-v">{{ objet.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
-            </div>
-            <div class="meta-row">
-              <span class="meta-k">Messages</span>
-              <span class="meta-v">{{ messages.length }}</span>
-            </div>
+            <div class="meta-row"><span class="meta-k">Créé par</span><span class="meta-v">{{ objet.creepar||'—' }}</span></div>
+            <div class="meta-row"><span class="meta-k">Date</span><span class="meta-v">{{ objet.createdAt | date:'dd/MM/yyyy' }}</span></div>
+            <div class="meta-row"><span class="meta-k">Messages</span><span class="meta-v">{{ messages.length }}</span></div>
           </div>
-
-          <!-- Changer statut (admin seulement) -->
           <div class="statut-zone" *ngIf="auth.estAdmin()">
             <p class="zone-label">Changer le statut</p>
             <div class="statut-btns">
-              <button
-                *ngFor="let s of statuts"
-                [class]="'btn-s ' + (objet.status === s ? 'btn-s-active' : '')"
-                (click)="changerStatut(s)"
-              >{{ s }}</button>
+              <button *ngFor="let s of statuts"
+                [class]="'btn-s '+(objet.status===s?'btn-s-active':'')"
+                (click)="changerStatut(s)">{{ s }}</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ── Colonne droite : fil de discussion ── -->
+      <!-- ── Colonne droite ── -->
       <div class="col-right">
-
         <div class="conv-head">
           <span class="conv-title">💬 Fil de discussion</span>
           <span class="conv-count">{{ messages.length }} message(s)</span>
@@ -60,15 +46,12 @@
         <!-- Messages -->
         <div class="msg-zone" #msgZone>
           <div *ngIf="chargConv" class="conv-info">Chargement du fil...</div>
-          <div *ngIf="!chargConv && messages.length === 0" class="conv-info">
+          <div *ngIf="!chargConv && messages.length===0" class="conv-info">
             Aucun message. Commencez la discussion.
           </div>
 
-          <div
-            *ngFor="let msg of messages"
-            [class]="estMoi(msg) ? 'msg moi' : 'msg autre'"
-          >
-            <!-- Avatar gauche (autre utilisateur) -->
+          <div *ngFor="let msg of messages" [class]="estMoi(msg)?'msg moi':'msg autre'">
+
             <div *ngIf="!estMoi(msg)" class="avatar">
               {{ msg.auteur?.prenom?.charAt(0) }}{{ msg.auteur?.nom?.charAt(0) }}
             </div>
@@ -77,59 +60,119 @@
               <p *ngIf="!estMoi(msg)" class="msg-author">
                 {{ msg.auteur?.prenom }} {{ msg.auteur?.nom }}
               </p>
-              <div [class]="estMoi(msg) ? 'bubble bubble-moi' : 'bubble bubble-autre'">
-                <ng-container *ngFor="let morceau of decouperMessage(msg.content)">
-                  <span [class.mention-tag]="morceau.mention">{{ morceau.texte }}</span>
-                </ng-container>
+
+              <!-- Bulle texte (si texte présent) -->
+              <div *ngIf="msg.content"
+                [class]="estMoi(msg)?'bubble bubble-moi':'bubble bubble-autre'">
+                <span *ngFor="let mot of msg.content?.split(' ')"
+                  [class]="mot.startsWith('@') ? 'mention-tag' : ''">{{ mot }} </span>
               </div>
+
+              <!-- ✅ Pièces jointes -->
+              <div *ngIf="msg.pieceJointes?.length > 0" class="attachments">
+                <div *ngFor="let pj of msg.pieceJointes" class="attachment-item">
+
+                  <!-- Image → prévisualisation -->
+                  <ng-container *ngIf="fileSvc.estImage(pj.typeFichier)">
+                    <a [href]="pj.url" target="_blank" class="attachment-image-wrapper">
+                      <img [src]="pj.url" [alt]="pj.nomFichier" class="attachment-image"/>
+                    </a>
+                  </ng-container>
+
+                  <!-- Autres fichiers → carte avec icône -->
+                  <ng-container *ngIf="!fileSvc.estImage(pj.typeFichier)">
+                    <a [href]="pj.url" target="_blank" class="attachment-file"
+                       [class.attachment-file-moi]="estMoi(msg)">
+                      <span class="attachment-icon">{{ fileSvc.icone(pj.typeFichier) }}</span>
+                      <div class="attachment-info">
+                        <span class="attachment-nom">{{ pj.nomFichier }}</span>
+                        <span class="attachment-taille">{{ fileSvc.formaterTaille(pj.tailleKo) }}</span>
+                      </div>
+                      <span class="attachment-dl">↓</span>
+                    </a>
+                  </ng-container>
+
+                </div>
+              </div>
+
               <p class="msg-time">{{ msg.sent_date | date:'HH:mm' }}</p>
             </div>
 
-            <!-- Avatar droite (moi) -->
             <div *ngIf="estMoi(msg)" class="avatar avatar-moi">
               {{ auth.getEmail()?.charAt(0)?.toUpperCase() }}
             </div>
           </div>
         </div>
 
-        <!-- Zone de saisie avec @mention -->
-        <div class="input-zone">
-          <div class="message-input">
-            <div class="message-input-highlight" aria-hidden="true">
-              <span *ngFor="let morceau of nouveauMessage.split(/(\s+)/); let index = index"
-                [class.mention-input-tag]="estMorceauMentionne(nouveauMessage.split(/(\s+)/), index)"
-              >{{ morceau }}</span>
+        <!-- ✅ Prévisualisation des fichiers en attente -->
+        <div *ngIf="fichiersEnAttente.length > 0" class="fichiers-attente">
+          <div *ngFor="let f of fichiersEnAttente" class="fichier-preview">
+
+            <!-- Spinner si en cours d'upload -->
+            <div *ngIf="f.uploading" class="upload-spinner">⏳</div>
+
+            <!-- Prévisualisation image -->
+            <img *ngIf="f.preview && !f.uploading" [src]="f.preview" class="preview-img" [alt]="f.nomFichier"/>
+
+            <!-- Icône pour les autres fichiers -->
+            <div *ngIf="!f.preview && !f.uploading" class="preview-icon">
+              {{ fileSvc.icone(f.typeFichier) }}
             </div>
+
+            <!-- Nom et taille -->
+            <div class="preview-info">
+              <span class="preview-nom">{{ f.nomFichier }}</span>
+              <span class="preview-taille">{{ fileSvc.formaterTaille(f.tailleKo) }}</span>
+            </div>
+
+            <!-- Supprimer -->
+            <button class="preview-del" (click)="supprimerFichier(f)">✕</button>
+          </div>
+        </div>
+
+        <!-- Zone de saisie -->
+        <div class="input-zone">
+
+          <!-- ✅ Input file caché -->
+          <input
+            #fileInput
+            type="file"
+            style="display:none"
+            multiple
+            accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.zip,.txt"
+            (change)="onFichiersSelectionnes($event)"
+          />
+
+          <!-- Bouton attache -->
+          <button class="btn-attach" (click)="ouvrirSelecteurFichier()" title="Joindre un fichier">
+            📎
+          </button>
+
+          <div class="message-input">
             <input
               type="text"
               [(ngModel)]="nouveauMessage"
               (ngModelChange)="filtrerUtilisateurs()"
-              placeholder="Écrire un message... (tapez @ pour mentionner)"
+              placeholder="Écrire un message... (@ pour mentionner)"
               (keyup.enter)="envoyer()"
             />
 
-            <!--  Dropdown des suggestions @mention -->
-            <div *ngIf="rechercheMentionActive" class="mention-suggestions">
-              <button
-                *ngFor="let user of suggestions"
-                type="button"
-                (mousedown)="selectionnerUtilisateur(user)"
-              >
+            <!-- Suggestions @mention -->
+            <div *ngIf="suggestions.length > 0" class="mention-suggestions">
+              <button *ngFor="let user of suggestions" type="button"
+                (mousedown)="selectionnerUtilisateur(user)">
                 <div class="suggestion-avatar">
                   {{ user.prenom?.charAt(0) }}{{ user.nom?.charAt(0) }}
                 </div>
                 <div class="suggestion-info">
-                  <span class="suggestion-nom">{{ user.nom }}</span>
+                  <span class="suggestion-nom">{{ user.prenom }} {{ user.nom }}</span>
                   <span class="suggestion-email">{{ user.email }}</span>
                 </div>
               </button>
-              <p *ngIf="suggestions.length === 0" class="no-suggestion">
-                Aucun utilisateur trouvé.
-              </p>
             </div>
-
           </div>
-          <button class="btn-send" (click)="envoyer()" [disabled]="!nouveauMessage.trim()">
+
+          <button class="btn-send" (click)="envoyer()" [disabled]="!peutEnvoyer()">
             Envoyer
           </button>
         </div>

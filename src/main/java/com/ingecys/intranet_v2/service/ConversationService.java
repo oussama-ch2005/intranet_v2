@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,6 +101,23 @@ public class ConversationService {
     }
 
     private MessageResponde mapperMessage(Message msg) {
+
+        //MAPPER LES PIECE JOITE
+        List<MessageResponde.PieceJointeDto> pjDtos=new ArrayList<>();
+        if(msg.getPieceJointes() != null) {
+            pjDtos=msg.getPieceJointes().stream()
+                    .map(pj->MessageResponde.PieceJointeDto.builder()
+                            .id((long) pj.getId())
+                            .nomFichier(pj.getNomFichier())
+                            .url(pj.getUrl())
+                            .TypeFichier(pj.getTypeFichier())
+                            .tailleKo(pj.getTailleKo())
+
+                            .build()
+
+
+                    ).collect(Collectors.toList());
+        }
         return MessageResponde.builder()
                 .id(msg.getId())
                 .content(msg.getContent())
@@ -111,6 +129,7 @@ public class ConversationService {
                         .prenom(msg.getSender().getPrenom())
                         .email(msg.getSender().getEmail())
                         .build())
+                .pieceJointes(pjDtos) //pieces jointes incluss
                 .build();
     }
 }
