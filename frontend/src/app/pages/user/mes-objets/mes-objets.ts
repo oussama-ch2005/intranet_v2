@@ -22,11 +22,11 @@ export class MesObjets implements OnInit {
   showModal      = false;
 
   types = [
-    { valeur:'TICKET',       label:'Ticket',       icone:'🎫' },
-    { valeur:'DEMANDE',      label:'Demande',      icone:'📋' },
-    { valeur:'TACHE',        label:'Tâche',        icone:'✅' },
-    { valeur:'INTERVENTION', label:'Intervention', icone:'🔧' },
-    { valeur:'MATERIEL',     label:'Matériel',     icone:'📦' },
+    { valeur:'TICKET',       label:'Ticket',       icone:'' },
+    { valeur:'DEMANDE',      label:'Demande',      icone:'' },
+    { valeur:'TACHE',        label:'Tâche',        icone:'' },
+    { valeur:'INTERVENTION', label:'Intervention', icone:'' },
+    { valeur:'MATERIEL',     label:'Matériel',     icone:'' },
   ];
 
   nouvelObjet = { typeObject:'TICKET', title:'', description:'', priority:'NORMALE' };

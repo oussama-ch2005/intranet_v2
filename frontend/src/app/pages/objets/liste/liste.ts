@@ -21,11 +21,11 @@ export class Liste implements OnInit {
   showModal = false;
 
   types=[
-    {valeur:'TICKET', labek:'Ticket',icone:'🎫'},
-    { valeur: 'DEMANDE',      label: 'Demandes',      icone: '📋' },
-    { valeur: 'TACHE',        label: 'Tâches',        icone: '✅' },
-    { valeur: 'INTERVENTION', label: 'Interventions', icone: '🔧' },
-    { valeur: 'MATERIEL',     label: 'Matériels',     icone: '📦' },
+    {valeur:'TICKET', labek:'Ticket',icone:''},
+    { valeur: 'DEMANDE',      label: 'Demandes',      icone: '' },
+    { valeur: 'TACHE',        label: 'Tâches',        icone: '' },
+    { valeur: 'INTERVENTION', label: 'Interventions', icone: '' },
+    { valeur: 'MATERIEL',     label: 'Matériels',     icone: '' },
 
   ];
 

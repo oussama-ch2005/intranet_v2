@@ -172,9 +172,8 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
 
 
 
-  // ──────────────────────────────────────────
-  // SYSTÈME DE @MENTION
-  // ──────────────────────────────────────────
+  // SYSTEME DE MENTION
+ 
 
   filtrerUtilisateurs() {
     // Nettoyer les mentions dont le nom a été effacé
@@ -312,9 +311,9 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
-  // ──────────────────────────────────────────
+  
   // CHARGEMENT
-  // ──────────────────────────────────────────
+  
 
   chargerObjet() {
     this.objSvc.obtenirParId(this.objetId).subscribe({
@@ -332,8 +331,8 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
       next: (d: any) => {
         this.conversation = d;
         this.messages     = [...(d.messages || [])];
-         console.log('Messages reçus:', this.messages);        // 👈 ajoutez
-         console.log('Email courant:', this.auth.getEmail());  // 👈 ajoutez
+         console.log('Messages reçus:', this.messages);        //  ajoutez
+         console.log('Email courant:', this.auth.getEmail());  //  ajoutez
         this.chargConv    = false;
         this.shouldScroll = true;
         this.cdr.detectChanges();
@@ -393,14 +392,14 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
       receiverId:           null
     };
 
-    // ✅ Vider immédiatement l'input
+    //  Vider immédiatement l'input
     this.nouveauMessage = '';
     this.mentionsSelectionnees.clear();
     this.suggestions = [];
 
     this.msgSvc.envoyer(this.conversation.id, data).subscribe({
       next: (msgReponse: any) => {
-        // ✅ Ajouter immédiatement sans attendre le WebSocket
+        //  Ajouter immédiatement sans attendre le WebSocket
         const dejaDans = this.messages.find((m: any) => m.id === msgReponse.id);
         if (!dejaDans) {
           this.messages = [...this.messages, msgReponse];
@@ -423,9 +422,9 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
-  // ──────────────────────────────────────────
+  
   // UTILITAIRES
-  // ──────────────────────────────────────────
+  
 
   estMoi(msg: any): boolean {
     return msg.auteur?.email === this.auth.getEmail();

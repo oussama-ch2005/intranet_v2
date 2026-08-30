@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component ,ChangeDetectorRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {Auth} from '../../core/service/auth';
@@ -18,7 +18,7 @@ export class Login {
   erreur='';
   chargement=false;
 
-  constructor(private auth:Auth,private router :Router,) {}
+  constructor(private auth:Auth,private router :Router,private cdr: ChangeDetectorRef) {}
 
   connecter (){
     this.erreur="";
@@ -34,10 +34,13 @@ export class Login {
         }else{
           this.router.navigate(['/user/user-dashboard']);
         }
+
+
       },
       error: () => {
         this.chargement=false;
         this.erreur="Email ou mot de passe incorrect";
+        this.cdr.detectChanges();
       }
     });
   }

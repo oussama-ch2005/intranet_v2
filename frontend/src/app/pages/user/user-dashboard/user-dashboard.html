@@ -6,7 +6,7 @@
 
       <div class="welcome">
         <div>
-          <h1>Bonjour, {{ auth.getEmail()?.split('@')?.[0] }} 👋</h1>
+          <h1>Bonjour, {{ auth.getEmail()?.split('@')?.[0] }} </h1>
           <p>Voici un aperçu de vos objets et discussions en cours.</p>
         </div>
         <a routerLink="/user/mes-objets" class="btn-primary">+ Nouvel objet</a>
@@ -40,7 +40,7 @@
             </div>
             <div class="objet-right">
               <span [class]="'badge '+badgeStatut(o.status)">{{ o.status }}</span>
-              <span class="fil">💬 Ouvrir le fil →</span>
+              <span class="fil"><i class="pi pi-comment"><img src="https://img.icons8.com/material-outlined/24/comments--v1.png" width="15"></i> Ouvrir le fil →</span>
             </div>
           </div>
         </div>

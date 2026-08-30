@@ -12,7 +12,7 @@ export class Websocket{
   messageRecu$ = new Subject<any>();
   notificationRecue$ = new Subject<string>();
 
-  // ✅ Injectez NgZone
+  // Injectez NgZone
   constructor(private ngZone: NgZone) {}
 
   connecter(email: string) {

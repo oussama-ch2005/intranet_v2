@@ -9,7 +9,7 @@ export class FileService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ Upload avec progression
+  //  Upload avec progression
   upload(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
@@ -17,12 +17,12 @@ export class FileService {
     return this.http.post<any>(`${this.api}/upload`, formData);
   }
 
-  // ✅ Vérifie si c'est une image
+  // Vérifie si c'est une image
   estImage(typeFichier: string): boolean {
     return typeFichier?.startsWith('image/');
   }
 
-  // ✅ Icône selon le type
+  //  Icône selon le type
   icone(typeFichier: string): string {
     if (!typeFichier) return '📎';
     if (typeFichier.startsWith('image/'))       return '🖼️';
@@ -36,7 +36,7 @@ export class FileService {
     return '📎';
   }
 
-  // ✅ Formater la taille
+  //  Formater la taille
   formaterTaille(tailleKo: number): string {
     if (!tailleKo) return '';
     if (tailleKo < 1024) return `${tailleKo} Ko`;

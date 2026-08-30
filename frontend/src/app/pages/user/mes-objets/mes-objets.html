@@ -15,7 +15,7 @@
 
       <div *ngIf="!chargement" class="list">
         <div *ngIf="objetsFiltres.length===0" class="empty">
-          <div class="empty-icon">📭</div>
+          <div class="empty-icon"></div>
           <p>Aucun objet trouvé.</p>
           <button class="btn-primary" (click)="showModal=true">Créer mon premier objet</button>
         </div>
@@ -34,7 +34,7 @@
           <div class="row-right">
             <span [class]="'badge '+badgePriorite(o.priority)">{{ o.priority }}</span>
             <span [class]="'badge '+badgeStatut(o.status)">{{ o.status }}</span>
-            <div class="fil-btn">💬 Ouvrir le fil →</div>
+            <div class="fil-btn"><i class="pi pi-comment"><img src="https://img.icons8.com/material-outlined/24/comments--v1.png" width="15"></i> Ouvrir le fil →</div>
           </div>
         </div>
       </div>

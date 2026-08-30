@@ -13,26 +13,26 @@
     <ng-container *ngIf="auth.estAdmin()">
       <p class="nav-section-label">Administration</p>
       <a routerLink="/admin/dashboard" routerLinkActive="nav-active" class="nav-item">
-        <span class="nav-icon">⊞</span> Dashboard
+        <span class="nav-icon"><i class="pi pi-home"><img src="https://img.icons8.com/ios/50/000000/home.png"></i></span> Dashboard
       </a>
       <a routerLink="/objets/liste" routerLinkActive="nav-active" class="nav-item">
-        <span class="nav-icon">📂</span> Tous les objets
+        <span class="nav-icon"><i class="pi pi-list"><img src="https://img.icons8.com/ios/50/000000/list.png"></i></span> Tous les objets
       </a>
       <a routerLink="/admin/users" routerLinkActive="nav-active" class="nav-item">
-        <span class="nav-icon">👥</span> Utilisateurs
+        <span class="nav-icon"><i class="pi pi-users"><img src="https://img.icons8.com/parakeet-filled/48/group.png"></i></span> Utilisateurs
       </a>
     </ng-container>
 
     <ng-container *ngIf="!auth.estAdmin()">
       <p class="nav-section-label">Mon espace</p>
       <a routerLink="/user/user-dashboard" routerLinkActive="nav-active" class="nav-item">
-        <span class="nav-icon">🏠</span> Accueil
+        <span class="nav-icon"><i class="pi pi-home"><img src="https://img.icons8.com/ios/50/000000/home.png"></i></span> Accueil
       </a>
       <a routerLink="/user/mes-objets" routerLinkActive="nav-active" class="nav-item">
-        <span class="nav-icon">📂</span> Mes objets
+        <span class="nav-icon"><i class="pi pi-list"><img src="https://img.icons8.com/ios/50/000000/list.png"></i></span> Mes objets
       </a>
         <a routerLink="/user/mes-mentions" routerLinkActive="nav-active" class="nav-item">
-         <span class="nav-icon">🔔</span> Mes mentions
+         <span class="nav-icon"><i class="pi pi-list"><img src="https://img.icons8.com/external-bearicons-glyph-bearicons/64/external-Mention-email-bearicons-glyph-bearicons.png"></i></span> Mes mentions
        </a>
     </ng-container>
 

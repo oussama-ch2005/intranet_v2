@@ -9,18 +9,7 @@
     <h2 class="page-titre">{{ titre }}</h2>
   </div>
 
-  <!-- Recherche -->
-  <div class="navbar-center">
-    <div class="search-bar">
-      <span class="search-icon">🔍</span>
-      <input
-        type="text"
-        [(ngModel)]="recherche"
-        placeholder="Rechercher un objet..."
-        (keyup.enter)="rechercherObjet()"
-      />
-    </div>
-  </div>
+  
 
   <!-- Actions droite -->
   <div class="navbar-right">
@@ -28,7 +17,7 @@
     <!-- Notifications -->
     <div class="notif-wrapper">
       <button class="icon-btn" (click)="toggleNotifs()" [class.active]="showNotifs">
-        🔔
+        <i class="pi pi-bell"><img src="https://img.icons8.com/fluency/48/appointment-reminders--v1.png" width="30"></i>
         <span class="badge-count" *ngIf="notifications.length > 0">
           {{ notifications.length }}
         </span>
@@ -53,7 +42,7 @@
             class="notif-item"
             (click)="ouvrirNotification(n)"
           >
-            <div class="notif-icon">💬</div>
+            <div class="notif-icon"><i class="pi pi-bell"><img src="https://img.icons8.com/material-outlined/24/comments--v1.png" ></i></div>
             <div class="notif-content">
               <p class="notif-text">
                 {{ auteurNotification(n) }} vous a mentionné dans « {{ objetNotification(n) }} »
@@ -88,14 +77,14 @@
         </div>
         <div class="dropdown-sep"></div>
         <button class="dropdown-item" routerLink="/user/dashboard" (click)="fermerMenus()">
-          🏠 Mon espace
+          <i class="pi pi-home"><img src="https://img.icons8.com/ios/50/000000/home.png " width="20"></i> Mon espace
         </button>
         <button class="dropdown-item" routerLink="/admin/dashboard" *ngIf="auth.estAdmin()" (click)="fermerMenus()">
-          ⊞ Dashboard admin
+           Dashboard admin
         </button>
         <div class="dropdown-sep"></div>
         <button class="dropdown-item danger" (click)="auth.deconnecter()">
-          🚪 Déconnexion
+          <i class="pi pi-sign-out"><img src="https://img.icons8.com/ios/50/000000/exit.png" width="20"></i> Déconnexion
         </button>
       </div>
     </div>

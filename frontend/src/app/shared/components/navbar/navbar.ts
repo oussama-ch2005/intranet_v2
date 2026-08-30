@@ -159,6 +159,15 @@ private notifSub!: Subscription;
     this.showProfil = false;
   }
 
+  acceuil(){
+    if(this.auth.estAdmin()){
+      return '/admin/dashboard';
+    }else{
+      return '/user/user-dashboard';
+    }
+  }
+
+
   initiales():string{
     const email=this.auth.getEmail()||'';
     return email.charAt(0).toUpperCase();
