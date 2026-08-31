@@ -42,7 +42,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/files/upload").permitAll() // ou .authenticated() selon ton besoin
                         .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()      // pour que les <img>/<a> fonctionnent (cf. plus haut)
 
-                        // Règle générale ENSUITE
+                        // Règle generale ENSUITE
                         .requestMatchers("/api/files/**").authenticated()
 
                         .requestMatchers("/api/user/**").hasRole("ADMIN")

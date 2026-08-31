@@ -66,11 +66,6 @@ export class MesMentionsComponent implements OnInit {
     this.router.navigate(['/objets/detail', mention.conversationId]);
   }
 
-  icone(type: string) {
-    const m: any = {
-      TICKET:'🎫', DEMANDE:'📋',
-      TACHE:'✅', INTERVENTION:'🔧', MATERIEL:'📦'
-    };
-    return m[type] || '💬';
-  }
+    
+  
 }

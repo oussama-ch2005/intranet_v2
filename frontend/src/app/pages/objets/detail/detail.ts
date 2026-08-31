@@ -347,7 +347,7 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
     setTimeout(() => this.wsSvc.abonnerConversation(convId), 800);
 
     this.wsSub = this.wsSvc.messageRecu$.subscribe(msg => {
-      // ✅ Évite les doublons (message déjà ajouté via HTTP)
+      //  evite les doublons (message depuis WS jà ajout via HTTP)
       const dejaDans = this.messages.find((m: any) => m.id === msg.id);
       if (!dejaDans) {
         this.messages = [...this.messages, msg];
@@ -357,9 +357,9 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
-  // ──────────────────────────────────────────
+  
   // ENVOI
-  // ──────────────────────────────────────────
+ 
 
    peutEnvoyer(): boolean {
     const aTexte   = this.nouveauMessage.trim().length > 0;
@@ -430,10 +430,7 @@ export class Detail implements OnInit, OnDestroy, AfterViewChecked {
     return msg.auteur?.email === this.auth.getEmail();
   }
 
-  icone(t: string) {
-    const m: any = { TICKET:'🎫', DEMANDE:'📋', TACHE:'✅', INTERVENTION:'🔧', MATERIEL:'📦' };
-    return m[t] || '📄';
-  }
+ 
 
   badgeStatut(s: string) {
     const m: any = { OUVERT:'b-blue', EN_COURS:'b-amber', RESOLU:'b-green', FERME:'b-gray' };
